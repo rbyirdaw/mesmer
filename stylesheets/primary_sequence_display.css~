@@ -1,6 +1,3 @@
-#primary-seq {
-  margin-bottom: 10px;
-}
 .C {
   background-color: black;
   color: white; 
