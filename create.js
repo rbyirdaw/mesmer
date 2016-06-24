@@ -59,6 +59,8 @@ function createDisplay(fileName) {
         _vis.numRes = _vis.resData.length;
         console.log(_vis.numRes+" CA atoms read.");
 
+	build_primary_sequence_display();
+
 	calc_pw_distances();
 
 	build_force_layout();
