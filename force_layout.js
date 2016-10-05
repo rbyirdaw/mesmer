@@ -12,7 +12,7 @@ function getResNodesEdges() {
   for (i = 0; i < _vis.numRes; i++) {
     resNodesEdges.nodes.push({resNum: i, resID:"", resName:""});
     for (j = i; j < _vis.numRes; j++) {
-      if ( (j !== i) && (_vis.pwDist[i][j] > 12) ) {
+      if ( (j !== i) && (_vis.pwDist[i][j] > _vis.pwDistMin) ) {
         resNodesEdges.edges.push({source: i, target: j, "distance": _vis.pwDist[i][j]});
       } //if j !== i
     }
@@ -32,7 +32,7 @@ function build_force_layout() {
       height = 480;
 
  
-  var svg = d3.select('body').append('svg')
+  var svg = d3.select('.svg_holder').append('svg')
     .attr('width', width)
     .attr('height', height);
 

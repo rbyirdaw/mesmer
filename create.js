@@ -7,8 +7,18 @@ function init() {
     _vis = {
         resData: [],
 	pwDist: [],
+	pwDistMin: 12,
 	numRes: undefined
     };
+
+$(document).ready(function() {
+    $("input[name='pwDistMinSelect']")
+	.on("change", function() {
+		_vis.pwDistMin = this.value;
+		$(".pwDistMinDisplay").html(this.value);
+		console.log(this.value);
+	});
+  });
 }
 //=============================================================================
 
