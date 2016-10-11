@@ -1,8 +1,12 @@
 function add(res, terminus) {
   var newRes = '<div class="c2 C ' + terminus + ' ">';
   newRes += '<div class="l2" ' + 'data-resID="' + res.resID + '"' +
-    ' data-resNum="' + res.resNum + '">' + res.resID + '</div>';
-  newRes += '</div>';
+    ' data-resNum="' + res.resNum + '">' + 
+    res.resID + 
+    '<br>' +
+    res.resNum +
+    '</div>';
+    newRes += '</div>';
 
   //$(newRes).insertAfter(".c2:last");
 

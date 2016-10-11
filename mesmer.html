@@ -7,13 +7,19 @@
     <script src="create.js" charset="utf-8"></script>
     <script src="primary_sequence_display.js" charset="utf-8"></script>
 
+    <link rel="stylesheet" href="stylesheets/mesmer.css">
     <link rel="stylesheet" href="stylesheets/primary_sequence_display.css">
 
   </head>
 
 
   <body>
-	<div id="primary-seq"></div>
+	<section id="primary-seq"></section>
+	<section class="svg_holder"></section>
+	<section class="controls">
+		<div class="pwDistMinDisplay">minimum distance</div>
+		<input type="range" name="pwDistMinSelect" min="0" max="20" step="1" value="Minimum Pair-wise Distance">
+	</section>
   </body>
 
 
