@@ -18,3 +18,7 @@
 input[type="range"] {
     width: 100%;
 }
+.link {
+  stoke-width: 2;
+  stroke: #ccc;
+}
