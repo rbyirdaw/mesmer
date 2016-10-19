@@ -7,7 +7,7 @@ function init() {
     _vis = {
         resData: [],
 	pwDist: [],
-	pwDistMin: 6,
+	pwDistMin: 12,
 	nodes: [],
 	edges: [],
 	force: undefined,
@@ -17,10 +17,13 @@ function init() {
     };
 
 $(document).ready(function() {
+
+    $("[name='minDist']").html(_vis.pwDistMin);
+
     $("input[name='pwDistMinSelect']")
 	.on("change", function() {
 		_vis.pwDistMin = this.value;
-		$(".pwDistMinDisplay").html(this.value);
+		$("[name='minDist']").html(this.value);
 		console.log(this.value);
 
 	});

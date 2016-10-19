@@ -16,8 +16,8 @@ function build_force_layout() {
     .size([width, height])
     .nodes(_vis.nodes)				
     .links(_vis.edges)
-    .linkDistance([150])
-    .charge([-700])
+    .linkDistance([250])
+    .charge([-400])
     .on("tick", tick);
 //    .start();
 
@@ -59,8 +59,8 @@ function setNodesLinks() {
   //Begin node + edge additions
 
   //link = link.data(_vis.edges);
-  link =  link.data(_vis.force.links(), function(d) { console.log(d);
-    return d.source.resNum + "-" + d.target.resNum; 
+  link =  link.data(_vis.force.links(), function(d) { /*console.log(d);*/
+    return d.source + "-" + d.target; 
   });
 
   var linkEnter = link.enter()
@@ -94,7 +94,7 @@ function setNodesLinks() {
 	    .attr("dy",".35em")
 	    .attr("text-anchor", "middle")
 	    .text(function(d) { 
-	        return d.resNum;
+	        return d.resNum+1;
 	 });
 
   node.exit().remove();
