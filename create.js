@@ -22,9 +22,14 @@ $(document).ready(function() {
 
     $("input[name='pwDistMinSelect']")
 	.on("change", function() {
-		_vis.pwDistMin = this.value;
+		_vis.pwDistMin = +this.value;
 		$("[name='minDist']").html(this.value);
 		console.log(this.value);
+
+
+		getResNodesEdges();
+		setNodesLinks();
+
 
 	});
   });
