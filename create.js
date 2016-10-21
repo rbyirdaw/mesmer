@@ -8,6 +8,7 @@ function init() {
         resData: [],
 	pwDist: [],
 	pwDistMin: 12,
+        resPairGap: 3,
 	nodes: [],
 	edges: [],
 	force: undefined,
@@ -26,14 +27,25 @@ $(document).ready(function() {
 		$("[name='minDist']").html(this.value);
 		console.log(this.value);
 
+		getResNodesEdges();
+		setNodesLinks();
+    });
+
+    $("[name='resPairGap']").html(_vis.resPairGap);
+
+    $("input[name='resPairGapSelect']")
+	.on("change", function() {
+		_vis.resPairGap = +this.value;
+		$("[name='resPairGap']").html(this.value);
+		console.log(this.value);
 
 		getResNodesEdges();
 		setNodesLinks();
+    });
 
-
-	});
   });
-}
+    
+}//init
 //=============================================================================
 
 function createDisplay(fileName) {
