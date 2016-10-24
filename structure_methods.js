@@ -13,7 +13,9 @@ function getResNodesEdges() {
   for (i = 0; i < _vis.numRes; i++) {
     _vis.nodes.push({resNum: i, resID:"", resName:""});
     for (j = i; j < _vis.numRes; j++) {
-      if ( (j !== i) && (_vis.pwDist[i][j] > _vis.pwDistMin) ) {
+      if ( (j !== i) && 
+		(Math.abs(i - j) >= _vis.resPairGapMin) &&
+		(_vis.pwDist[i][j] <= _vis.pwDistMax) ) {
 	
 	_vis.edges.push({source: i, target: j, "distance": _vis.pwDist[i][j]});
       } //if j !== i

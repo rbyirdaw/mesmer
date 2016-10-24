@@ -7,8 +7,8 @@ function init() {
     _vis = {
         resData: [],
 	pwDist: [],
-	pwDistMin: 12,
-        resPairGap: 3,
+	pwDistMax: 6,
+        resPairGapMin: 3,
 	nodes: [],
 	edges: [],
 	force: undefined,
@@ -19,24 +19,24 @@ function init() {
 
 $(document).ready(function() {
 
-    $("[name='minDist']").html(_vis.pwDistMin);
-
-    $("input[name='pwDistMinSelect']")
+    $("[name='maxDist']").html(_vis.pwDistMax);
+    $("input[name='pwDistSelect']").val(_vis.pwDistMax);
+    $("input[name='pwDistSelect']")
 	.on("change", function() {
-		_vis.pwDistMin = +this.value;
-		$("[name='minDist']").html(this.value);
+		_vis.pwDistMax = +this.value;
+		$("[name='maxDist']").html(this.value);
 		console.log(this.value);
 
 		getResNodesEdges();
 		setNodesLinks();
     });
 
-    $("[name='resPairGap']").html(_vis.resPairGap);
-
+    $("[name='resPairGapMin']").html(_vis.resPairGapMin);
+    $("input[name='resPairGapSelect']").val(_vis.resPairGapMin);
     $("input[name='resPairGapSelect']")
 	.on("change", function() {
-		_vis.resPairGap = +this.value;
-		$("[name='resPairGap']").html(this.value);
+		_vis.resPairGapMin = +this.value;
+		$("[name='resPairGapMin']").html(this.value);
 		console.log(this.value);
 
 		getResNodesEdges();
