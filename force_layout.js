@@ -2,7 +2,6 @@
 
 function build_force_layout() {
 
-//  var resNodesEdges = getResNodesEdges();			
   var width = 640,
       height = 480;
 
@@ -14,53 +13,51 @@ function build_force_layout() {
   
   _vis.force = d3.layout.force()
     .size([width, height])
-    .nodes(_vis.nodes)				
-    .links(_vis.edges)
+    .nodes(_vis.nodes)
     .linkDistance([150])
-    .charge([-700])
+    .charge([-150])
     .on("tick", tick);
-//    .start();
 
-/*
-  var _vis.link = svg.selectAll(".link")
-    .data(resNodesEdges.edges)
-    .enter()
-    .append("g")
-    .attr("class", "link");
+  var color = d3.scale.category20();
 
-  _vis.link
-    .append("line")
-    .style("stroke", "#ccc")
-    .style("stroke-width", 1);
-    
-  var _vis.node = svg.selectAll(".node")
-    .data(resNodesEdges.nodes)
-    .enter()
-    .append("g")
-    .attr("class", "node")
-    .call(force.drag);
+  var node = d3.select("svg").selectAll(".g-node");
 
-  _vis.node
-    .append("circle")
-    .attr("r", 10)
-    .style("fill", function(d, i) {
-      return colors(i);
-    });
+//  node = node.data(_vis.force.nodes(), function(d) {return d.resNum; } );
+  node = node.data(_vis.nodes);
+  var nodeEnter = node.enter()
+	.append("g")
+	.attr("class", "g-node")
+	.call(_vis.force.drag);
 
-    addNodesEdges();
-*/
+	nodeEnter.append("circle")		
+		.attr("r", 16)
+		.attr("fill", function(d) { return color(d.resNum);});
+
+	nodeEnter.append("text")
+	    .attr("dy",".35em")
+	    .attr("text-anchor", "middle")
+	    .text(function(d) { 
+	        return d.resNum+1;
+	 });
+
+  node.exit().remove();
+
 } // build_force_layout
 
+//=============================================================================
 function setNodesLinks() {
-  var color = d3.scale.category20();
+  //var color = d3.scale.category20();
   var node = d3.select("svg").selectAll(".g-node"),
       link = d3.select("svg").selectAll(".g-link");
+
+  //_vis.force.nodes(_vis.nodes);
+  _vis.force.links(_vis.edges);
 
   //Begin node + edge additions
 
   //link = link.data(_vis.edges);
-  link =  link.data(_vis.force.links(), function(d) { console.log(d);
-    return d.source.resNum + "-" + d.target.resNum; 
+  link =  link.data(_vis.force.links(), function(d) { /*console.log(d);*/
+    return d.source + "-" + d.target; 
   });
 
   var linkEnter = link.enter()
@@ -78,9 +75,9 @@ function setNodesLinks() {
 
   link.exit().remove();
 
-
-  node = node.data(_vis.nodes, function(d) {return d.resNum; } );
-//  node = node.data(_vis.nodes);
+/*
+//  node = node.data(_vis.force.nodes(), function(d) {return d.resNum; } );
+  node = node.data(_vis.nodes);
   var nodeEnter = node.enter()
 	.append("g")
 	.attr("class", "g-node")
@@ -94,33 +91,15 @@ function setNodesLinks() {
 	    .attr("dy",".35em")
 	    .attr("text-anchor", "middle")
 	    .text(function(d) { 
-	        return d.resNum;
+	        return d.resNum+1;
 	 });
 
   node.exit().remove();
-
+*/
   _vis.force.start();
 
-/*
-  _vis.node.append("text")
-    .attr("dy",".35em")
-    .attr("text-anchor","middle")
-    .text(function(d) {
-        return d.resNum;
-      });
-
-  var linkText = _vis.link.append("text")
-    .attr("dy",".35em")
-//    .attr("x", function(d) { return d.source.x; } )
-  //  .attr("y", function(d) { return d.source.y; } )
-    .attr("text-anchor", "middle")
-    .text(function(d) {
-        return d.distance;
-      });
-*/
-
 }
-
+//=============================================================================
 function tick() {
 //  force.on('tick', function(e) {
 
@@ -155,11 +134,6 @@ function tick() {
             });
 
 }
-
-
-//  force.start();
-//  force.alpha(0);
-
 
 
 

@@ -5,27 +5,22 @@
 //=============================================================================
 
 function getResNodesEdges() {
-  var 
-/*resNodesEdges = {
-    nodes: [],
-    edges: []
-  },
-*/
-  i, j, numEdges;
-
+  var i, j, numEdges;
+  
+  //_vis.nodes = [];
+  _vis.edges = [];
   numEdges = 0;
   for (i = 0; i < _vis.numRes; i++) {
-    //resNodesEdges.nodes.push({resNum: i, resID:"", resName:""});
     _vis.nodes.push({resNum: i, resID:"", resName:""});
     for (j = i; j < _vis.numRes; j++) {
-      if ( (j !== i) && (_vis.pwDist[i][j] > _vis.pwDistMin) ) {
-//        resNodesEdges.edges.push({source: i, target: j, "distance": _vis.pwDist[i][j]});
+      if ( (j !== i) && 
+		(Math.abs(i - j) >= _vis.resPairGapMin) &&
+		(_vis.pwDist[i][j] <= _vis.pwDistMax) ) {
+	
 	_vis.edges.push({source: i, target: j, "distance": _vis.pwDist[i][j]});
       } //if j !== i
     }
   } //for i
-
-//  return resNodesEdges;
 
 } //getResNodesEdges
 

@@ -19,8 +19,17 @@
 	<section id="primary-seq"></section>
 	<section class="svg_holder"></section>
 	<section class="controls">
-		<div class="pwDistMinDisplay">minimum distance</div>
-		<input type="range" name="pwDistMinSelect" min="0" max="20" step="1" value="Minimum Pair-wise Distance">
+		<div>
+		  <span class="control-label">maximum distance: </span>
+		  <span name="maxDist"></span>
+		  <input type="range" name="pwDistSelect" min="0" max="20" step="1">
+		</div>
+		<br><br>	
+		<div>
+		  <span class="control-label">residue pair gap minimum:</span>
+		  <span name="resPairGapMin"></span>
+		  <input type="range" name="resPairGapSelect" min="3" max="20" step="1">
+		</div>
 	</section>
   </body>
 

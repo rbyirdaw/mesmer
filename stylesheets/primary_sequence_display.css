@@ -1,3 +1,6 @@
+#primary-seq {
+  margin-bottom: 10px;
+}
 .C {
   background-color: black;
   color: white; 
@@ -26,5 +29,5 @@
 }
 .l2 {
   text-align: center;
-  padding-top: 1em;
+  padding-top: 0.5em;
 }
