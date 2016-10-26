@@ -6,7 +6,7 @@ function build_force_layout() {
       height = 480;
 
  
-  var svg = d3.select('.svg_holder').append('svg')
+  var svg = d3.select('.svg-holder').append('svg')
     .attr('width', width)
     .attr('height', height);
 
