@@ -79,7 +79,8 @@ function createDisplay(fileName) {
 
 init();
 //createDisplay("coordinates/1le1.csv");
-createDisplay("coordinates/4hhb.csv");
+createDisplay("coordinates/1l2y.csv");
+//createDisplay("coordinates/4hhb.csv");
 
 
 
