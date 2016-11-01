@@ -52,7 +52,7 @@ function createDisplay(fileName) {
 
   d3.csv(fileName,
       function(d) {
-	_vis.nodes.push({resNum: +d.resNum, resID:"", resName:""});
+	_vis.nodes.push({resNum: +d.resNum, resID: d.resID, resName:""});
         return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
       },
       function(data) {

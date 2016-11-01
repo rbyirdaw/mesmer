@@ -30,14 +30,14 @@ function build_force_layout() {
 	.call(_vis.force.drag);
 
 	nodeEnter.append("circle")		
-		.attr("r", 16)
+		.attr("r", 26)
 		.attr("fill", function(d) { return color(d.resNum);});
 
 	nodeEnter.append("text")
 	    .attr("dy",".35em")
 	    .attr("text-anchor", "middle")
 	    .text(function(d) { 
-	        return d.resNum+1;
+	        return d.resID+"\n"+(d.resNum+1);
 	 });
 
   node.exit().remove();
