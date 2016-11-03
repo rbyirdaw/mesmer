@@ -52,9 +52,11 @@ function createDisplay(fileName) {
 
   d3.csv(fileName,
       function(d) {
+	_vis.nodes.push({resNum: +d.resNum, resID: d.resID, resName:""});
         return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
       },
-      function(data) {      
+      function(data) {
+
         _vis.resData = data;
 
         _vis.numRes = _vis.resData.length;
@@ -76,7 +78,9 @@ function createDisplay(fileName) {
 //=============================================================================
 
 init();
-createDisplay("coordinates/1le1.csv");
+//createDisplay("coordinates/1le1.csv");
+createDisplay("coordinates/1l2y.csv");
+//createDisplay("coordinates/4hhb.csv");
 
 
 
