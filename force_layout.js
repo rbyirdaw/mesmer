@@ -45,15 +45,11 @@ function build_force_layout() {
 } // build_force_layout
 
 //=============================================================================
-function setNodesLinks() {
+function setLinks() {
   //var color = d3.scale.category20();
-  var node = d3.select("svg").selectAll(".g-node"),
-      link = d3.select("svg").selectAll(".g-link");
+  var link = d3.select("svg").selectAll(".g-link");
 
-  //_vis.force.nodes(_vis.nodes);
   _vis.force.links(_vis.edges);
-
-  //Begin node + edge additions
 
   //link = link.data(_vis.edges);
   link =  link.data(_vis.force.links(), function(d) { /*console.log(d);*/
@@ -74,6 +70,16 @@ function setNodesLinks() {
 	 });
 
   link.exit().remove();
+
+//  _vis.force.start();
+
+}
+//=============================================================================
+function setNodes() {
+  //var color = d3.scale.category20();
+  var node = d3.select("svg").selectAll(".g-node");
+
+  _vis.force.nodes(_vis.nodes);
 
 /*
 //  node = node.data(_vis.force.nodes(), function(d) {return d.resNum; } );
@@ -96,9 +102,10 @@ function setNodesLinks() {
 
   node.exit().remove();
 */
-  _vis.force.start();
+//  _vis.force.start();
 
 }
+
 //=============================================================================
 function tick() {
 //  force.on('tick', function(e) {
