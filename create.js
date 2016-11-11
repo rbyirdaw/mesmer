@@ -20,6 +20,7 @@ $(document).ready(function() {
 
     $("[name='resPairGapMin']").html(_vis.resPairGapMin);
     $("input[name='resPairGapSelect']").val(_vis.resPairGapMin);
+
     $("input[name='resPairGapSelect']")
 	.on("change", function() {
 		_vis.resPairGapMin = +this.value;
@@ -48,6 +49,13 @@ $(document).ready(function() {
 	
         });
 
+    $("input[name='hideFreeRes']").prop("checked", _vis.hideFreeRes);
+    $("input[name='hideFreeRes']")
+	.on("change", function () { 
+	  _vis.hideFreeRes = this.checked;
+	  console.log("hide free res" + this.checked);
+	});
+
   });//document.ready
     
 //=============================================================================
@@ -63,7 +71,10 @@ function init() {
 	force: undefined,
 //        node: undefined,
 //        link: undefined,
-	numRes: undefined
+	numRes: undefined,
+	//for structures with > 80 residues,
+	//provide user option to hide residues not matching filter criteria (free)
+        hideFreeRes: true
     };
 
 }//init
@@ -93,6 +104,8 @@ function createDisplay(fileName) {
 	build_force_layout();
 	setLinks();
 	_vis.force.start();
+
+	$("input[name='resPairGapSelect']").attr("max",_vis.numRes);
 
       });
 	
