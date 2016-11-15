@@ -7,20 +7,29 @@
 function getResNodesEdges() {
   var i, j, numEdges;
   
-  //_vis.nodes = [];
   _vis.edges = [];
+  _vis.linkedNodes = [];
   numEdges = 0;
   for (i = 0; i < _vis.numRes; i++) {
-//    _vis.nodes.push({resNum: i, resID:"", resName:""});
+
     for (j = i; j < _vis.numRes; j++) {
       if ( (j !== i) && 
 		(Math.abs(i - j) >= _vis.resPairGapMin) &&
 		(_vis.pwDist[i][j] <= _vis.pwDistMax) ) {
 	
 	_vis.edges.push({source: i, target: j, "distance": _vis.pwDist[i][j]});
+	//track linked nodes as well
+	if (_vis.linkedNodes.indexOf(i) === -1) {
+	  _vis.linkedNodes.push(i);
+	}
+	if (_vis.linkedNodes.indexOf(j) === -1) {
+	  _vis.linkedNodes.push(j);
+	}
+	
       } //if j !== i
     }
   } //for i
+
 
 } //getResNodesEdges
 

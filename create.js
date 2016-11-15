@@ -67,6 +67,7 @@ function init() {
 	pwDistMax: 6,
         resPairGapMin: 3,
 	nodes: [],
+	linkedNodes: [],
 	edges: [],
 	force: undefined,
 //        node: undefined,
