@@ -43,9 +43,16 @@ $(document).ready(function() {
 		d3.select("svg").remove();
 		//begin loading new structure
 		createDisplay(this.value);
-
-		//TODO: not updating
+		
 		$("input[name='resPairGapSelect']").attr("max", _vis.numRes);
+
+		$("[name='resPairGapMin']").html(3);
+		$("input[name='resPairGapSelect']").val(3);
+
+
+		$("[name='maxDist']").html(6);
+		$("input[name='pwDistSelect']").val(6);
+
 	
         });
 

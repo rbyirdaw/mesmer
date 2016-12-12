@@ -1,15 +1,12 @@
 
 
-
-
-//=============================================================================
-
 function getResNodesEdges() {
   var i, j, numEdges;
   
   _vis.edges = [];
   _vis.linkedNodes = [];
   numEdges = 0;
+
   for (i = 0; i < _vis.numRes; i++) {
 
     for (j = i; j < _vis.numRes; j++) {
@@ -35,23 +32,6 @@ function getResNodesEdges() {
 
 
 //=============================================================================
-
-/*
-function rand_pw_distances() {
-
-  for (var i = 0; i < numRes; i++) {
-    pw_distances[i] = [];
-    tempStr = "";
-    for (var j = (i + 1); j < numRes; j++) {
-      pw_distances[i][j] = 1 + Math.floor(Math.random() * 12);
-      tempStr += (pw_distances[i][j] + " ");
-    }
-    console.log(tempStr);
-  }
-
-}
-*/
-//=============================================================================
 function calc_pw_distances() {
 
   for (var i = 0; i < _vis.numRes; i++) {
@@ -71,3 +51,20 @@ function calc_pw_distances() {
 }
 
 //=============================================================================
+
+/*
+function rand_pw_distances() {
+
+  for (var i = 0; i < numRes; i++) {
+    pw_distances[i] = [];
+    tempStr = "";
+    for (var j = (i + 1); j < numRes; j++) {
+      pw_distances[i][j] = 1 + Math.floor(Math.random() * 12);
+      tempStr += (pw_distances[i][j] + " ");
+    }
+    console.log(tempStr);
+  }
+
+}
+*/
+
