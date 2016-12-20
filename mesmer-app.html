@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="stylesheets/mesmer.css">
+
+  </head>
+
+
+  <body>
+	<section id="primary-seq"></section>
+	<section class="controls">
+	    <fieldset>
+	      <legend>Select a structure</legend>
+
+		<select id="structures" style="width: 90%;">
+		  <option value="1le1.csv">2 beta-hairpin (1le1, 12)</option>
+		  <option value="1l2y.csv">trp-cage miniprotein (1l2y, 20)</option>
+		  <option value="4hhb.csv">human deoxyhaemoglobin (4hhb, 146)</option>
+		</select>
+	    </fieldset>
+	    <fieldset>
+	      <legend>Filter</legend>
+		<div>
+		  <span class="control-label">maximum distance (&Aring;): </span>
+		  <span name="maxDist"></span>
+		  <input type="range" name="pwDistSelect" min="0" max="20" step="1">
+		</div>
+		<br><br>
+		<div>
+		  <span class="control-label">residue pair gap minimum:</span>
+		  <span name="resPairGapMin"></span>
+		  <input type="range" name="resPairGapSelect" min="1" step="1">
+		</div>
+		<br><br>
+		<input type="checkbox" name="hideFreeRes" value="hide">
+	   	<span class="control-label">Hide free residues (for total res > 80)</span>
+	    </fieldset>
+	</section>
+	<section class="svg-holder"></section>
+
+	<script src="mesmerModel.js"></script>
+	<script src="mesmerView.js"></script>
+	<script src="mesmerController.js"></script>
+	<script src="mesmerApp.js"></script>
+  </body>
+
+
+</html>
