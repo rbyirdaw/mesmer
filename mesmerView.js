@@ -19,7 +19,19 @@
       }, false);
 
     }
-  }
+  };
+
+  MesmerView.prototype.setNodes = function(nodes) {
+
+
+  };
+
+
+
+  MesmerView.prototype.setEdges = function(edges) {
+
+
+  };
 
   window.mesmerApp = window.mesmerApp || {};
   window.mesmerApp.View = MesmerView;
