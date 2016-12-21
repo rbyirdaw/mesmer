@@ -3,20 +3,6 @@ var _vis = {};
 
 //=============================================================================
 
-function init() {
-    _vis = {
-        resData: [],
-	pwDist: [],
-	pwDistMax: 6,
-        resPairGapMin: 3,
-	nodes: [],
-	edges: [],
-	force: undefined,
-//        node: undefined,
-//        link: undefined,
-	numRes: undefined
-    };
-
 $(document).ready(function() {
 
     $("[name='maxDist']").html(_vis.pwDistMax);
@@ -28,11 +14,13 @@ $(document).ready(function() {
 		console.log(this.value);
 
 		getResNodesEdges();
-		setNodesLinks();
-    });
+		setLinks();
+		_vis.force.start();
+    	});
 
     $("[name='resPairGapMin']").html(_vis.resPairGapMin);
     $("input[name='resPairGapSelect']").val(_vis.resPairGapMin);
+
     $("input[name='resPairGapSelect']")
 	.on("change", function() {
 		_vis.resPairGapMin = +this.value;
@@ -40,17 +28,70 @@ $(document).ready(function() {
 		console.log(this.value);
 
 		getResNodesEdges();
-		setNodesLinks();
-    });
+		setLinks();
+		_vis.force.start();
+    	});
 
-  });
+    $("select[id='structures']")
+	.on("change", function() {
+		console.log(this.value);
+
+		//clear object and init
+		_vis = {};
+		init();
+		//clear
+		d3.select("svg").remove();
+		//begin loading new structure
+		createDisplay(this.value);
+		
+		$("input[name='resPairGapSelect']").attr("max", _vis.numRes);
+
+		$("[name='resPairGapMin']").html(3);
+		$("input[name='resPairGapSelect']").val(3);
+
+
+		$("[name='maxDist']").html(6);
+		$("input[name='pwDistSelect']").val(6);
+
+	
+        });
+
+    $("input[name='hideFreeRes']").prop("checked", _vis.hideFreeRes);
+    $("input[name='hideFreeRes']")
+	.on("change", function () { 
+	  _vis.hideFreeRes = this.checked;
+	  console.log("hide free res" + this.checked);
+	});
+
+  });//document.ready
     
+//=============================================================================
+
+function init() {
+    _vis = {
+        resData: [],
+	pwDist: [],
+	pwDistMax: 6,
+        resPairGapMin: 3,
+	nodes: [],
+	linkedNodes: [],
+	edges: [],
+	force: undefined,
+//        node: undefined,
+//        link: undefined,
+	numRes: undefined,
+	//for structures with > 80 residues,
+	//provide user option to hide residues not matching filter criteria (free)
+        hideFreeRes: true
+    };
+
 }//init
+
 //=============================================================================
 
 function createDisplay(fileName) {
 
-  d3.csv(fileName,
+  d3.csv("coordinates/"+fileName,
       function(d) {
 	_vis.nodes.push({resNum: +d.resNum, resID: d.resID, resName:""});
         return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
@@ -62,13 +103,18 @@ function createDisplay(fileName) {
         _vis.numRes = _vis.resData.length;
         console.log(_vis.numRes+" CA atoms read.");
 
-	build_primary_sequence_display();
+	//hold-off on primary sequence display - somewhat redundant for now
+//	build_primary_sequence_display();
 
 	calc_pw_distances();
 	getResNodesEdges();
 
 	build_force_layout();
-	setNodesLinks();
+	setLinks();
+	_vis.force.start();
+
+	$("input[name='resPairGapSelect']").attr("max",_vis.numRes);
+
       });
 	
 }//read_pdb_csv
@@ -78,9 +124,7 @@ function createDisplay(fileName) {
 //=============================================================================
 
 init();
-//createDisplay("coordinates/1le1.csv");
-createDisplay("coordinates/1l2y.csv");
-//createDisplay("coordinates/4hhb.csv");
+createDisplay("1le1.csv");
 
 
 
