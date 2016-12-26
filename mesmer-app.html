@@ -15,7 +15,7 @@
 	    <fieldset>
 	      <legend>Select a structure</legend>
 
-		<select id="structures" style="width: 90%;">
+		<select name="structureSelect" id="structures" style="width: 90%;">
 		  <option value="1le1.csv">2 beta-hairpin (1le1, 12)</option>
 		  <option value="1l2y.csv">trp-cage miniprotein (1l2y, 20)</option>
 		  <option value="4hhb.csv">human deoxyhaemoglobin (4hhb, 146)</option>
@@ -39,7 +39,9 @@
 	   	<span class="control-label">Hide free residues (for total res > 80)</span>
 	    </fieldset>
 	</section>
-	<section class="svg-holder"></section>
+	<section class="svg-holder">
+	    <svg width="640" height="480"></svg>
+	</section>
 
 	<script src="mesmerModel.js"></script>
 	<script src="mesmerView.js"></script>
