@@ -12,33 +12,36 @@
 	self.loadStructure(fileName);
     });
 
-
-
   }
+  
+//==============================================================================  
 
   MesmerController.prototype.loadStructure = function(value) {
     console.log("at controller "+value);
 
     var data = undefined;
+	var self = this;
 
     d3.text("coordinates/"+value, function(text) {
 
       data = d3.csv.parse(text, function(d) {
-	return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
+	    console.log(d);
+		return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
       });
 
+    var pwDist = self.model.getPWdistances();
+
+    var edges = self.getEdges(pwDist);
+    self.view.setEdges(edges);
+
+    var nodes = self.getNodes(data);
+    self.view.setNodes(nodes);
+		
+	self.model.create(data);
+	
+	self.view.create();	  	
+	  
     });//d3.text
-
-
-    
-    this.model.create(data);
-    var pwDist = this.model.getPWdistances();
-
-    var edges = this.getEdges(pwDist);
-    this.view.setEdges(edges);
-
-    var nodes = this.getNodes(data);
-    this.view.setNodes(nodes);
 
   };
 
