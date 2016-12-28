@@ -3,7 +3,13 @@
   
   var model,
       view,
-      controller;
+      controller,
+	  structures;
+	  
+  
+  var structList = document.getElementsByName("structureSelect");
+  
+  structures = new mesmerApp.Structures();
 
   model = new mesmerApp.Model();
 
