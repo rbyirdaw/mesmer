@@ -55,6 +55,35 @@
 	node.exit().remove();	
 	
 
+//==
+
+    var link = d3.select("svg").selectAll(".g-link");
+
+    self.forceLayout.force.links(self.forceLayout.edges);
+
+  //link = link.data(_vis.edges);
+    link =  link.data(self.forceLayout.force.links(), function(d) { /*console.log(d);*/
+      return d.source + "-" + d.target; 
+    });
+
+    var linkEnter = link.enter()
+	.append("g")
+	.attr("class", "g-link");
+
+    linkEnter.append("line").attr("class", "link");
+
+    linkEnter.append("text")
+	.attr("dy",".35em")
+        .attr("text-anchor", "middle")
+	.text(function(d) {
+	        return d.distance.toFixed(2);
+	 });
+
+    link.exit().remove();
+
+
+//==
+
     self.forceLayout.force.start();	
   }
 
@@ -63,7 +92,7 @@
 
     if (action === "loadStructure") {
       this.structureSelect[0].addEventListener("change", function() {
-	console.log(this.value);
+	//console.log(this.value);
         eveHandler(this.value);
       }, false);
 
@@ -81,11 +110,13 @@
 
   MesmerView.prototype.setEdges = function(edges) {
 
+	this.forceLayout.edges = edges;
 
   };
   
   MesmerView.prototype.tick = function() {
     var node = d3.select("svg").selectAll(".g-node");
+    var link = d3.select("svg").selectAll(".g-link");
 
     node.selectAll("circle")
 		.attr("cx", function(d) { return d.x; })
@@ -98,6 +129,22 @@
           return d.y;
         });
 	
+//==
+  link.selectAll("line")
+      .attr('x1', function(d) { return d.source.x; })
+      .attr('y1', function(d) { return d.source.y; })
+      .attr('x2', function(d) { return d.target.x; })
+      .attr('y2', function(d) { return d.target.y; });
+
+//     linkText
+  link.selectAll("text")
+            .attr("x", function(d) {
+                return ((d.source.x + d.target.x)/2);
+            })
+            .attr("y", function(d) {
+                return ((d.source.y + d.target.y)/2);
+            });
+
   }
 
   window.mesmerApp = window.mesmerApp || {};

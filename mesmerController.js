@@ -7,6 +7,9 @@
     this.model = model;
     this.view = view;
 
+    this.resPairGapMin = 3;
+    this.pwDistMax = 6;
+
     var self = this;
     this.view.setListener("loadStructure", function(fileName) {
 	self.loadStructure(fileName);
@@ -29,6 +32,8 @@
 		return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
       });
 
+    self.model.create(data);
+
     var pwDist = self.model.getPWdistances();
 
     var edges = self.getEdges(pwDist);
@@ -37,7 +42,7 @@
     var nodes = self.getNodes(data);
     self.view.setNodes(nodes);
 		
-	self.model.create(data);
+	
 	
 	self.view.create();	  	
 	  

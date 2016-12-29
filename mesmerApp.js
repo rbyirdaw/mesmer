@@ -7,9 +7,9 @@
 	  structures;
 	  
   
-  var structList = document.getElementsByName("structureSelect");
+  //var structList = document.getElementsByName("structureSelect");
   
-  structures = new mesmerApp.Structures();
+ // structures = new mesmerApp.Structures();
 
   model = new mesmerApp.Model();
 
