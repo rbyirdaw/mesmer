@@ -30,6 +30,13 @@
 		.linkDistance([150])
 		.charge([-150])
 		.on("tick", self.tick);
+
+    if (d3.select("svg")) {
+      d3.select("svg").remove();
+      d3.select('.svg-holder').append('svg')
+          .attr('width', 640)
+          .attr('height', 480);
+    }
 	
     var node = d3.select("svg").selectAll(".g-node");
 	node = node.data(self.forceLayout.nodes);

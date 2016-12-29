@@ -28,7 +28,7 @@
     d3.text("coordinates/"+value, function(text) {
 
       data = d3.csv.parse(text, function(d) {
-	    console.log(d);
+	    //console.log(d);
 		return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
       });
 
