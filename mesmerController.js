@@ -2,10 +2,10 @@
 
 (function(window) {
 
-  function MesmerController(model, view) {
+  function MesmerController(view) {
 
-    this.model = model;
     this.view = view;
+    this.modelList = {};
 
     this.resPairGapMin = 3;
     this.pwDistMax = 6;
@@ -23,30 +23,47 @@
     console.log("at controller "+value);
 
     var data = undefined;
-	var self = this;
+    var self = this;
 
-    d3.text("coordinates/"+value, function(text) {
+    if (self.modelList[value] === undefined) {
 
-      data = d3.csv.parse(text, function(d) {
+      d3.text("coordinates/"+value, function(text) {
+
+        data = d3.csv.parse(text, function(d) {
 	    //console.log(d);
-		return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
-      });
+	 	  return {resNum: +d.resNum, resID: d.resID, x: +d.x, y: +d.y, z: +d.z} ;
+        });
 
-    self.model.create(data);
+        var newModel = new mesmerApp.Model();
+        newModel.create(data);
+        self.modelList[value] = newModel;
 
-    var pwDist = self.model.getPWdistances();
+        var pwDist = newModel.getPWdistances();
+ 
+        var edges = self.getEdges(pwDist);
+        self.view.setEdges(edges);
 
-    var edges = self.getEdges(pwDist);
-    self.view.setEdges(edges);
-
-    var nodes = self.getNodes(data);
-    self.view.setNodes(nodes);
-		
+        var nodes = self.getNodes(data);
+        self.view.setNodes(nodes);
 	
+        self.view.create();
+
+      });//d3.text
+
+    } else {
+
+      var pwDist = self.modelList[value].getPWdistances();
+ 
+      var edges = self.getEdges(pwDist);
+      self.view.setEdges(edges);
+
+      var nodes = self.getNodes(self.modelList[value].getResData());
+      self.view.setNodes(nodes);
 	
-	self.view.create();	  	
-	  
-    });//d3.text
+      self.view.create();
+        
+    }
+
 
   };
 

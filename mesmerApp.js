@@ -1,20 +1,14 @@
 /*mesmer app init*/
 (function() {
   
-  var model,
-      view,
-      controller,
-	  structures;
-	  
-  
-  //var structList = document.getElementsByName("structureSelect");
-  
- // structures = new mesmerApp.Structures();
-
-  model = new mesmerApp.Model();
+  var view,
+      controller;
 
   view = new mesmerApp.View();
 
-  controller = new mesmerApp.Controller(model, view);
+  controller = new mesmerApp.Controller(view);
+
+  //load default
+  controller.loadStructure("1l2y.csv");
 
 })();

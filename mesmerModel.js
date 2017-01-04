@@ -20,6 +20,10 @@
 
   };
 
+  MesmerModel.prototype.getResData = function() {
+    return this.resData;
+  }
+
   MesmerModel.prototype.calcPWdistance = function() {
 
     var i, j;
