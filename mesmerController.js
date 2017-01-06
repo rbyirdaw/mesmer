@@ -6,14 +6,26 @@
 
     this.view = view;
     this.modelList = {};
+    this.activeModel = undefined;
 
     this.resPairGapMin = 3;
+    this.view.setResPairGapMin(this.resPairGapMin);
+
     this.pwDistMax = 6;
+    this.view.setMaxDist(this.pwDistMax);
 
     var self = this;
     this.view.setListener("loadStructure", function(fileName) {
-	self.loadStructure(fileName);
+      self.loadStructure(fileName);
     });
+
+    this.view.setListener("setMaxDist", function() {
+      self.setMaxDist();
+    });
+    this.view.setListener("setResPairGapMin", function() {
+      self.setResPairGapMin();
+    });
+
 
   }
   
@@ -64,8 +76,27 @@
         
     }
 
+    self.activeModel = value;
 
   };
+
+//==============================================================================
+
+  MesmerController.prototype.setMaxDist = function() {
+    var pwDist = this.modelList[this.activeModel].getPWdistances();
+ 
+    var edges = this.getEdges(pwDist);
+    this.view.setEdges(edges);
+    this.view.update();
+  };
+
+//==============================================================================
+
+  MesmerController.prototype.setResPairGapMin = function() {
+
+  };
+
+//==============================================================================
 
   MesmerController.prototype.getEdges = function(pwDist) {
   
@@ -92,6 +123,8 @@
 
   };
 
+
+//==============================================================================
 
   MesmerController.prototype.getNodes = function(data) {
 

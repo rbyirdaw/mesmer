@@ -4,25 +4,29 @@
 
   function MesmerView() {
 
-    this.structureSelect = document.getElementsByName("structureSelect");
-    this.pwDistSelect = document.getElementsByName("pwDistSelect");
-    this.resPairGapSelect = document.getElementsByName("resPairGapSelect");
+    this.structureSelect = document.querySelector("[name='structureSelect']");
+    this.maxDistSelect = document.querySelector("[name='maxDistSelect']");
+    this.resPairGapSelect = document.querySelector("[name='resPairGapSelect']");
+    this.maxDist = document.querySelector("[name='maxDist']");
+    this.resPairGapMin = document.querySelector("[name='resPairGapMin']");
 	
-	this.forceLayout = {
-	  force: undefined,
+    this.forceLayout = {
+      force: undefined,
       nodes: undefined,
       links: undefined,
 
       color: d3.scale.category20()  
-	};
+    };
 
   }
+
+
 
 //==============================================================================
   
   MesmerView.prototype.create = function() {
 	
-	var self = this;
+    var self = this;
 	
     self.forceLayout.force = d3.layout.force()
 		.size([640, 480])
@@ -64,6 +68,25 @@
 
 //==
 
+    self.setLinks();
+
+//==
+
+    self.forceLayout.force.start();	
+  }
+
+//==============================================================================
+
+  MesmerView.prototype.update = function() {
+    this.setLinks();
+    this.forceLayout.force.start();	
+  }
+
+//==============================================================================
+
+  MesmerView.prototype.setLinks = function() {
+
+    var self = this;
     var link = d3.select("svg").selectAll(".g-link");
 
     self.forceLayout.force.links(self.forceLayout.edges);
@@ -89,38 +112,71 @@
     link.exit().remove();
 
 
-//==
-
-    self.forceLayout.force.start();	
-  }
-
+  };
+//==============================================================================
   
   MesmerView.prototype.setListener = function(action, eveHandler) {
+    var self = this;
 
     if (action === "loadStructure") {
-      this.structureSelect[0].addEventListener("change", function() {
+      this.structureSelect.addEventListener("change", function() {
 	//console.log(this.value);
         eveHandler(this.value);
       }, false);
 
+    } else if (action === "setMaxDist") {
+      this.maxDistSelect.addEventListener("change", function() {
+	//console.log(this.value);
+	self.maxDist.innerHTML = this.value;
+        eveHandler(this.value);
+      }, false);
+
+    } else if (action === "setResPairGapMin") {
+      this.resPairGapSelect.addEventListener("change", function() {
+	//console.log(this.value);
+	self.resPairGapMin.innerHTML = this.value;
+        eveHandler(this.value);
+      }, false);
+
     }
+
+
   };
 
+
+
+//==============================================================================
+
+  MesmerView.prototype.setMaxDist = function(value) {
+    this.maxDist.innerHTML = value;
+    this.maxDistSelect.value = value;
+  };
+
+//==============================================================================
+
+  MesmerView.prototype.setResPairGapMin = function(value) {
+    this.resPairGapMin.innerHTML = value;
+    this.resPairGapSelect.value = value;
+  };
   
+//==============================================================================
+
   MesmerView.prototype.setNodes = function(nodes) {
     
 	this.forceLayout.nodes = nodes;
 
   };
 
-
+//==============================================================================
 
   MesmerView.prototype.setEdges = function(edges) {
 
 	this.forceLayout.edges = edges;
 
   };
-  
+
+//==============================================================================  
+
   MesmerView.prototype.tick = function() {
     var node = d3.select("svg").selectAll(".g-node");
     var link = d3.select("svg").selectAll(".g-link");
