@@ -128,14 +128,14 @@
       this.maxDistSelect.addEventListener("change", function() {
 	//console.log(this.value);
 	self.maxDist.innerHTML = this.value;
-        eveHandler(this.value);
+        eveHandler(+this.value);
       }, false);
 
     } else if (action === "setResPairGapMin") {
       this.resPairGapSelect.addEventListener("change", function() {
 	//console.log(this.value);
 	self.resPairGapMin.innerHTML = this.value;
-        eveHandler(this.value);
+        eveHandler(+this.value);
       }, false);
 
     }

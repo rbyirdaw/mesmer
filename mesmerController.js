@@ -19,11 +19,11 @@
       self.loadStructure(fileName);
     });
 
-    this.view.setListener("setMaxDist", function() {
-      self.setMaxDist();
+    this.view.setListener("setMaxDist", function(value) {
+      self.setMaxDist(value);
     });
-    this.view.setListener("setResPairGapMin", function() {
-      self.setResPairGapMin();
+    this.view.setListener("setResPairGapMin", function(value) {
+      self.setResPairGapMin(value);
     });
 
 
@@ -82,18 +82,27 @@
 
 //==============================================================================
 
-  MesmerController.prototype.setMaxDist = function() {
-    var pwDist = this.modelList[this.activeModel].getPWdistances();
- 
+  MesmerController.prototype.setMaxDist = function(value) {
+
+    this.pwDistMax = value;
+
+    var pwDist = this.modelList[this.activeModel].getPWdistances(); 
     var edges = this.getEdges(pwDist);
+
     this.view.setEdges(edges);
     this.view.update();
   };
 
 //==============================================================================
 
-  MesmerController.prototype.setResPairGapMin = function() {
+  MesmerController.prototype.setResPairGapMin = function(value) {
+    this.resPairGapMin = value;
 
+    var pwDist = this.modelList[this.activeModel].getPWdistances(); 
+    var edges = this.getEdges(pwDist);
+
+    this.view.setEdges(edges);
+    this.view.update();
   };
 
 //==============================================================================
