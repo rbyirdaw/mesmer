@@ -9,6 +9,7 @@
     this.resPairGapSelect = document.querySelector("[name='resPairGapSelect']");
     this.maxDist = document.querySelector("[name='maxDist']");
     this.resPairGapMin = document.querySelector("[name='resPairGapMin']");
+    this.toggleFreeRes = document.querySelector("[name='toggleFreeRes']");
 	
     this.forceLayout = {
       force: undefined,
@@ -76,6 +77,23 @@
   }
 
 //==============================================================================
+  MesmerView.prototype.toggleNodes = function(nodes, hide) {
+  
+    var allNodes = d3.selectAll(".g-node")[0];
+
+    for (i = 0; i < nodes.length; i++) {
+      if (hide) {
+        d3.select(allNodes[nodes[i]])
+	    .style({'display': 'none'});
+      } else {
+        d3.select(allNodes[nodes[i]])
+	    .style({'display': 'block'});
+      }
+    }
+
+  }
+
+//==============================================================================
 
   MesmerView.prototype.update = function() {
     this.setLinks();
@@ -138,6 +156,10 @@
         eveHandler(+this.value);
       }, false);
 
+    } else if (action === "toggleFreeRes") {
+      this.toggleFreeRes.addEventListener("change", function() {
+        eveHandler(this.checked);
+      }, false);
     }
 
 

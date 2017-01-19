@@ -7,6 +7,8 @@
     this.view = view;
     this.modelList = {};
     this.activeModel = undefined;
+    
+    this.freeNodes = [];
 
     this.resPairGapMin = 3;
     this.view.setResPairGapMin(this.resPairGapMin);
@@ -25,7 +27,9 @@
     this.view.setListener("setResPairGapMin", function(value) {
       self.setResPairGapMin(value);
     });
-
+    this.view.setListener("toggleFreeRes", function(value) {
+      self.toggleFreeRes(value);
+    });
 
   }
   
@@ -107,25 +111,48 @@
 
 //==============================================================================
 
+  MesmerController.prototype.toggleFreeRes = function(value) {
+  
+      this.view.toggleNodes(this.freeNodes, value);
+  
+  }
+
+
+//==============================================================================
+
   MesmerController.prototype.getEdges = function(pwDist) {
   
     var i, j;
     var edges = [];
     var numRes = pwDist.length;
+    var iLinked;
+
+    this.freeNodes = [];
 
     for (i = 0; i < numRes; i++) {
+      
+      iLinked = false;
 
       for (j = i; j < numRes; j++) {
         
-        if ( (j !== i) &&
-	    (Math.abs(i - j) >= this.resPairGapMin) &&
-	    (pwDist[i][j] <= this.pwDistMax) ) {
+        if (j !== i) {
+	  
+          if ( (Math.abs(i - j) >= this.resPairGapMin) &&
+	      (pwDist[i][j] <= this.pwDistMax) ) {
 
-	  edges.push({source: i, target: j, "distance": pwDist[i][j]});
-	}
+	    edges.push({source: i, target: j, "distance": pwDist[i][j]});
+
+            iLinked = true;
+	  }
+
+        } //(j != i)
 
       }//j
 
+      if (!iLinked) {
+	this.freeNodes.push(i);  
+      }
+    
     }//i
 
     return edges;
