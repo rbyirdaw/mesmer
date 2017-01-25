@@ -9,6 +9,6 @@
   controller = new mesmerApp.Controller(view);
 
   //load default
-  controller.loadStructure("1l2y.csv");
+  controller.loadStructure("1le1.csv");
 
 })();

@@ -61,7 +61,7 @@
 	    .attr("dy",".35em")
 	    .attr("text-anchor", "middle")
 	    .text(function(d) { 
-	      return d.resID+"\n"+(d.resNum+1);
+	      return d.resID+"\n"+(d.resNum);
 	    });
 
 	node.exit().remove();	
