@@ -127,13 +127,18 @@
     var numRes = pwDist.length;
     var iLinked;
 
-    this.freeNodes = [];
+    for (i = 0; i <= numRes; i++) {
+      this.freeNodes.push(i);
+    }
+
+//    this.freeNodes = [numRes];
 
     for (i = 0; i < numRes; i++) {
       
-      iLinked = false;
+//      iLinked = false;
+//      this.freeNodes.push(i);
 
-      for (j = i; j < numRes; j++) {
+      for (j = i; j <= numRes; j++) {
         
         if (j !== i) {
 	  
@@ -142,16 +147,32 @@
 
 	    edges.push({source: i, target: j, "distance": pwDist[i][j]});
 
-            iLinked = true;
+//            iLinked = true;
+            if (this.freeNodes.indexOf(i) !== -1) {
+              this.freeNodes.splice(this.freeNodes.indexOf(i), 1);
+            }
+            if (this.freeNodes.indexOf(j) !== -1) {
+              this.freeNodes.splice(this.freeNodes.indexOf(j), 1);
+            }
+
 	  }
 
         } //(j != i)
 
       }//j
 
+/*
       if (!iLinked) {
-	this.freeNodes.push(i);  
+        this.freeNodes.push(i); 
+        if (i === (numRes - 1)) {
+          this.freeNodes.push(numRes);
+        }
+
+      } else if (iLinked && (this.freeNodes.indexOf(i) !== -1) ) {
+        this.freeNodes.splice(this.freeNodes.indexOf(i), 1);
       }
+*/
+
     
     }//i
 
