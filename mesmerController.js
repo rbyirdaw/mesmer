@@ -9,6 +9,7 @@
     this.activeModel = undefined;
     
     this.freeNodes = [];
+    this.hideFreeNodes = false;
 
     this.resPairGapMin = 3;
     this.view.setResPairGapMin(this.resPairGapMin);
@@ -91,7 +92,14 @@
     this.pwDistMax = value;
 
     var pwDist = this.modelList[this.activeModel].getPWdistances(); 
+
+    this.view.toggleNodes(this.freeNodes, false);
+
     var edges = this.getEdges(pwDist);
+    
+    if (this.hideFreeNodes) {
+      this.view.toggleNodes(this.freeNodes, true);
+    }
 
     this.view.setEdges(edges);
     this.view.update();
@@ -103,7 +111,14 @@
     this.resPairGapMin = value;
 
     var pwDist = this.modelList[this.activeModel].getPWdistances(); 
+
+    this.view.toggleNodes(this.freeNodes, false);
+
     var edges = this.getEdges(pwDist);
+
+    if (this.hideFreeNodes) {
+      this.view.toggleNodes(this.freeNodes, true);
+    }
 
     this.view.setEdges(edges);
     this.view.update();
@@ -112,8 +127,9 @@
 //==============================================================================
 
   MesmerController.prototype.toggleFreeRes = function(value) {
-  
-      this.view.toggleNodes(this.freeNodes, value);
+
+    this.hideFreeNodes = value;
+    this.view.toggleNodes(this.freeNodes, value);
   
   }
 
@@ -178,7 +194,7 @@
     
     }//i
 
-    console.log(this.freeNodes.sort());
+    //console.log(this.freeNodes.sort());
 
     return edges;
 
