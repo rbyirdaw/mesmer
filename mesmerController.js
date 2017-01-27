@@ -127,11 +127,13 @@
     var numRes = pwDist.length;
     var iLinked;
 
+    this.freeNodes = [];
+
     for (i = 0; i <= numRes; i++) {
       this.freeNodes.push(i);
     }
 
-//    this.freeNodes = [numRes];
+
 
     for (i = 0; i < numRes; i++) {
       
@@ -175,6 +177,8 @@
 
     
     }//i
+
+    console.log(this.freeNodes.sort());
 
     return edges;
 
