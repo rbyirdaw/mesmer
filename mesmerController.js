@@ -64,6 +64,7 @@
         self.view.setNodes(nodes);
 	
         self.view.create();
+        self.view.setRangeMax('resPairGapSelect', data.length);
 
       });//d3.text
 

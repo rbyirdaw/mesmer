@@ -155,7 +155,6 @@
 	self.resPairGapMin.innerHTML = this.value;
         eveHandler(+this.value);
       }, false);
-
     } else if (action === "toggleFreeRes") {
       this.toggleFreeRes.addEventListener("change", function() {
         eveHandler(this.checked);
@@ -181,6 +180,19 @@
     this.resPairGapSelect.value = value;
   };
   
+//==============================================================================
+  
+  MesmerView.prototype.setRangeMax = function(rangeName, rangeMax) {
+
+    if (rangeName === 'maxDistSelect') {
+    } else if (rangeName === 'resPairGapSelect') {
+
+      this.resPairGapSelect.max = rangeMax;
+
+    }
+
+}
+
 //==============================================================================
 
   MesmerView.prototype.setNodes = function(nodes) {
