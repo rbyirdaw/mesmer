@@ -1,14 +1,14 @@
 /*mesmer app init*/
 (function() {
   
-  var model,
-      view,
+  var view,
       controller;
-
-  model = new mesmerApp.Model();
 
   view = new mesmerApp.View();
 
-  controller = new mesmerApp.Controller(model, view);
+  controller = new mesmerApp.Controller(view);
+
+  //load default
+  controller.loadStructure("1le1.csv");
 
 })();
