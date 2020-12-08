@@ -1,0 +1,26 @@
+{
+  "name": "mesmer",
+  "version": "1.0.0",
+  "description": "Visualize 1-D versus 3-D pair-wise residue distances of a protein structure.",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbyirdaw/mesmer.git"
+  },
+  "keywords": [
+    "protein",
+    "protein structure",
+    "residue",
+    "D3.js",
+    "visualization"
+  ],
+  "author": "Robel Yirdaw",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/rbyirdaw/mesmer/issues"
+  },
+  "homepage": "https://github.com/rbyirdaw/mesmer#readme"
+}
