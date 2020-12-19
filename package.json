@@ -4,6 +4,8 @@
   "description": "Visualize 1-D versus 3-D pair-wise residue distances of a protein structure.",
   "main": "",
   "scripts": {
+    "build": "webpack --config webpack-dev.config.js",
+    "start": "webpack serve --config webpack-dev.config.js",    
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
