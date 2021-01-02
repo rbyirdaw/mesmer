@@ -11,7 +11,40 @@ export class InputAutocomplete extends HTMLElement {
   constructor() {
     super();
 
-    let shadowRoot = this.attachShadow({mode: 'open'});
-    shadowRoot.appendChild(componentHtml.content.cloneNode(true));    
+    this.shadowRootRef = this.attachShadow({mode: 'open'});
+    this.shadowRootRef.appendChild(componentHtml.content.cloneNode(true));    
+
+    this._listItems;
   }
+
+  connectedCallback() {
+    let inputEl = this.shadowRootRef.querySelector('input');
+    inputEl.addEventListener('change', (e) => {
+        console.log("On change ", e.target.value);
+      });
+    inputEl.addEventListener('keydown', (e) => {
+      console.log("On keydown", e.target.value);
+    });
+  }
+
+  get listItems() {
+    return this._listItems;
+  }
+
+  set listItems(items) {
+    this._listItems = items;
+    this.render();
+  }
+
+  renderItemOptions() {
+    return this._listItems.map(item => {
+      return `<option>${item}</option>`
+    }).join('');
+  }
+
+  render() {
+    this.shadowRootRef.querySelector('datalist')
+      .innerHTML = `${this.renderItemOptions()}`
+  }
+
 }
