@@ -1,23 +1,18 @@
+import { SearchResultItem } from './search-result-item';
 
 let componentHtml = document.createElement('template');
-componentHtml.innerHTML = `
-  <input type="text" id="search-input">
-  <ul id="search-results">
-  </ul>
-
-`
-
+componentHtml.innerHTML = `<input type="text" id="search-input">`;
 export class SearchInput extends HTMLElement {
   constructor() {
     super();
-    this.shadowRootRef = this.attachShadow({mode: 'open'});
-    this.shadowRootRef.appendChild(componentHtml.content.cloneNode(true));
-
-    this._listItems;
+    //this.shadowRootRef = this.attachShadow({mode: 'open'});
+    //this.shadowRootRef.appendChild(componentHtml.content.cloneNode(true));
+    this.appendChild(componentHtml.content);
   }
 
   connectedCallback() {
-    let inputEl = this.shadowRootRef.querySelector('input');
+    //let inputEl = this.shadowRootRef.querySelector('input');
+    let inputEl = this.querySelector('input');
     inputEl.addEventListener('change', (e) => {
       console.log("On change ", e.target.value);
       this.dispatchEvent(new CustomEvent('item-selected', {
@@ -34,28 +29,9 @@ export class SearchInput extends HTMLElement {
         detail: {
           value: e.target.value
         },
-        bubbles: false
+        bubbles: true
       }));
     });
   }
-
-  get listItems() {
-    return this._listItems;
-  }
-
-  set listItems(items) {
-    this._listItems = items;
-    this.render();
-  }
-
-  renderListItems() {
-    return this._listItems.map(item => {
-      return `<li>${item}</li>`
-    }).join('');
-  }
-
-  render() {
-    this.shadowRootRef.querySelector('ul')
-      .innerHTML = `${this.renderListItems()}`;
-  }
+  
 }
