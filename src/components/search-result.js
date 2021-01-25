@@ -13,7 +13,7 @@ export class SearchResult extends HTMLElement {
 
     this._resultList = [];
 
-    customElements.define('result-item', SearchResultItem);
+    customElements.define('result-item', SearchResultItem, {extends: 'li'});
 
     this.render();
   }
@@ -29,7 +29,7 @@ export class SearchResult extends HTMLElement {
 
   renderResultItems() {
     return this._resultList.map(resultText => {
-      return `<result-item text=${resultText}></result-item>`;
+      return `<li is='result-item' text=${resultText}></li>`;
     }).join('');
   }
 

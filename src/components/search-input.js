@@ -1,7 +1,14 @@
-import { SearchResultItem } from './search-result-item';
-
 let componentHtml = document.createElement('template');
-componentHtml.innerHTML = `<input type="text" id="search-input">`;
+componentHtml.innerHTML = `
+  <style>
+    label {
+      display: block;
+    }
+  </style>
+  <label for="search-input"></label>
+  <input type="text" id="search-input" name="search-input">
+`;
+
 export class SearchInput extends HTMLElement {
   constructor() {
     super();
@@ -33,5 +40,16 @@ export class SearchInput extends HTMLElement {
       }));
     });
   }
-  
+
+  static get observedAttributes() {
+    return ['main-label'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (newValue && name === 'main-label') {
+      this.querySelector('label').innerHTML = newValue;
+    }
+   
+  }
+
 }

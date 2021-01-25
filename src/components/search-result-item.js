@@ -3,19 +3,24 @@ componentHtml.innerHTML = `
   <li></li>
 `;
 
-export class SearchResultItem extends HTMLElement {
+export class SearchResultItem extends HTMLLIElement {
   constructor() {
     super();
     //this.shadowRootRef = this.attachShadow({mode: 'open'});
     //this.shadowRootRef.appendChild(componentHtml.content.cloneNode(true));
-    this.appendChild(componentHtml.content.cloneNode(true));
+    //this.appendChild(componentHtml.content.cloneNode(true));
     this._text;
   }
 
   connectedCallback() {
-    this.querySelector('li')
-      .addEventListener('click', (e) => {
+    this.addEventListener('click', (e) => {
         console.log("li clicked");
+        this.dispatchEvent(new CustomEvent('item-clicked', {
+          detail: {
+            value: e.target._text
+          },
+          bubbles: true
+        }))
       })
   }
 
@@ -32,7 +37,6 @@ export class SearchResultItem extends HTMLElement {
   }
 
   render() {
-    this.querySelector('li')
-      .innerHTML = this._text;
+    this.innerHTML = this._text;
   }
 }

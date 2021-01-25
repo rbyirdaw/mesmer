@@ -11,6 +11,7 @@ export class TextSearch extends HTMLElement {
     customElements.define('search-result', SearchResult);
 
     this._resultList = [];
+    this.mainLabel = this.getAttribute('main-label');
 
     this.render();
   }
@@ -23,9 +24,18 @@ export class TextSearch extends HTMLElement {
     this.shadowRootRef.querySelector('search-result').resultList = results;
   }
   
+  static get observedAttributes() {
+    return ['main-label'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    this.mainLabel = newValue;
+    this.shadowRootRef.querySelector('search-input').setAttribute('main-label', newValue);
+  }
+
   render() {
     this.shadowRootRef.innerHTML = `
-      <search-input></search-input>
+      <search-input main-label=${this.mainLabel}></search-input>
       <search-result></search-result>
     `;
   }
