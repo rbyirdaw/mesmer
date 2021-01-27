@@ -38,6 +38,12 @@ export class PdbSearch extends HTMLElement {
     textSearchEl.shadowRoot.addEventListener('item-clicked', (e) => {
       console.log("Clicked item is ", e.detail.value);
       textSearchEl.resultList = [];
+      this.dispatchEvent(new CustomEvent('pdb-selected', {
+        detail: {
+          value: e.detail.value
+        },
+        bubbles: true
+      }));
     })
   }
 
