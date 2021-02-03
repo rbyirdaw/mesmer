@@ -1,5 +1,6 @@
 import { PdbSearch } from './pdb-search';
 import { StructureInfo } from './structure-info';
+import { getProteinStructure } from '../services';
 
 export class SelectStructure extends HTMLElement {
   constructor() {
@@ -19,6 +20,14 @@ export class SelectStructure extends HTMLElement {
   handlePdbSelection(pdbId) {
     console.log("Got pdb selection: ", pdbId);
     this.querySelector('structure-info').setAttribute('pdb-id', pdbId);
+    getProteinStructure(pdbId).then( (fullStructure) => {
+      this.dispatchEvent(new CustomEvent('structure-fetched', {
+        detail: {
+          value: fullStructure
+        },
+        bubbles: true
+      }))
+    })
   }
 
   render() {
