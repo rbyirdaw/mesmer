@@ -1,6 +1,7 @@
 
-const pdbSearchApi = `https://search.rcsb.org/rcsbsearch/v1/query?json=`;
-const modelServerApi = `https://models.rcsb.org/v1/`;
+const pdbSearchApi = 'https://search.rcsb.org/rcsbsearch/v1/query?json=';
+const modelServerApi = 'https://models.rcsb.org/v1/';
+const pdbEntryServiceApi = 'https://data.rcsb.org/rest/v1/core/entry/'
 
 const httpClient = (url, requestOptions) => {
   return fetch(url, requestOptions);  
@@ -46,3 +47,20 @@ export const getProteinStructure = (pdbId) => {
 
 };
 
+export const getPdbEntry = (pdbId) => {
+  return new Promise((resolve, reject) => {
+    if (!pdbId) {
+      reject("Invalid input.")
+    } else {
+      pdbId = pdbId.toLowerCase();
+      httpClient(pdbEntryServiceApi + pdbId)
+        .then(response => {
+          if (!response.ok) {
+            reject("Response error.")
+          } else {
+            resolve(response.json());
+          }
+        });
+    }
+  });
+}
