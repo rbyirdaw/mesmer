@@ -3,10 +3,10 @@ import * as d3 from 'd3';
 const componentHtml = document.createElement('template');
 componentHtml.innerHTML = `
   <style>
-    .links line {
+    .link-group line {
       stroke: #aaa;
     }
-    .nodes circle {
+    .node-group circle {
       pointer-events: all;
       stroke: none;
       stroke-width: 40px;
@@ -70,12 +70,12 @@ export class D3Graph extends HTMLElement {
   }
 
   set nodes(nodeList) {
+    this.clearNodes();
+
     this._nodes = nodeList;  
     this.joinNodes();
 
-    //clear links?
-    this._links = [];
-    this.joinLinks();
+    this.addNodeText();
 
     //update view
     this.render();
@@ -83,13 +83,20 @@ export class D3Graph extends HTMLElement {
 
 
   set links(linkList) {
+    this.clearLinks();
+
     this._links = linkList;    
     this.joinLinks();
+
     this.render();      
   }
 
   updateGraph(nodesLinks) {
     // nodesLinks = {nodes: [{},{},...], links: [{},{},...]}
+
+    this.clearNodes();
+    this.clearLinks();
+    
     const {nodes, links} = nodesLinks;
     this._nodes = nodes;
     this._links = links;
@@ -100,50 +107,79 @@ export class D3Graph extends HTMLElement {
     this.render();
   }
 
+  clearNodes() {
+    this._nodes = [];
+    this.joinNodes();
+  }
+
+  clearLinks() {
+    this._links = [];
+    this.joinLinks();
+  }
+
   createNodeElements() {
-    this.node = this.svg.select("g")
-      .append('g')
-        .attr('class', 'nodes')
-        .selectAll('circle');
+    this.node = this.svg.select("g")      
+        .selectAll('.node-group');    
   }
 
   createLinkElements() {
     this.link = this.svg.select("g")
-      .append('g')
-        .attr('class', 'links')
-        .selectAll('line');
+      .selectAll('.link-group');
   }
 
   joinNodes() {
     this.node = this.node
       .data(this._nodes, d => d.id)
-      .join(enter => enter.append("circle")
+      .join(enter => enter.append("g")
+        .attr("class", "node-group")        
+      );
+    
+    this.node
+      .append("circle")
         .attr("r", 8)
         .attr("fill","aqua")
         .call(d3.drag()
           .on("start", this.dragstarted.bind(this))
           .on("drag", this.dragged.bind(this))
-          .on("end", this.dragended.bind(this)))        
-        );    
+          .on("end", this.dragended.bind(this))); 
   }
 
   joinLinks() {
     this.link = this.link
       .data(this._links, d => [d.source, d.target])
-      .join("line");    
+      .join(enter => enter.append("g")
+        .attr("class", "link-group")        
+      );
+      
+    this.link
+      .append("line");
+  }
+
+  addNodeText() {
+    this.node
+      .append("text")
+        .attr("text-anchor", "middle")
+        .text(d => d.id);
   }
 
   ticked() {
     try {
       this.link && this.link
-      .attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
+        .selectAll('line')
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
 
       this.node
+        .selectAll('circle')
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
+
+      this.node
+        .selectAll('text')
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; });        
 
     } catch (ex) {
       console.log("Exception in ticked: ", ex);
