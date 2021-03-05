@@ -25,7 +25,9 @@ export class D3Graph extends HTMLElement {
     this.width = this.getAttribute('width');
     this.height = this.getAttribute('height');
     this.node;
+    this._nodeText;
     this.link;
+    this._linkText;
     this._nodes = [];
     this._links = [];
     this.simulation;
@@ -65,6 +67,12 @@ export class D3Graph extends HTMLElement {
       this.joinNodes();
       this.joinLinks();
 
+      this._linkText = (d) => d.source.id + " - " + d.target.id;
+      this._nodeText = (d) => d.id;
+
+      this.addNodeText();
+      this.addLinkText();
+
       this.render();
     }
   }
@@ -81,6 +89,12 @@ export class D3Graph extends HTMLElement {
     this.render();
   }
 
+  set nodeText(textFunc) {
+    this._nodeText = textFunc;
+    this.node
+      .selectAll('text')
+      .text(this._nodeText.bind(this))
+  }
 
   set links(linkList) {
     this.clearLinks();
@@ -91,12 +105,19 @@ export class D3Graph extends HTMLElement {
     this.render();      
   }
 
+  set linkText(textFunc) {
+    this._linkText = textFunc;
+    this.link
+      .selectAll('text')
+      .text(this._linkText.bind(this))
+  }
+
   updateGraph(nodesLinks) {
     // nodesLinks = {nodes: [{},{},...], links: [{},{},...]}
 
     this.clearNodes();
     this.clearLinks();
-    
+
     const {nodes, links} = nodesLinks;
     this._nodes = nodes;
     this._links = links;
@@ -159,17 +180,28 @@ export class D3Graph extends HTMLElement {
     this.node
       .append("text")
         .attr("text-anchor", "middle")
-        .text(d => d.id);
+        .text(this._nodeText.bind(this));
+  }
+
+  addLinkText() {
+    this.link
+      .append("text")
+      .text(this._linkText.bind(this));
   }
 
   ticked() {
     try {
-      this.link && this.link
+      this.link
         .selectAll('line')
         .attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
+
+      this.link
+        .selectAll('text')
+        .attr("x", function(d) { return (d.source.x + d.target.x)/2; })
+        .attr("y", function(d) { return (d.source.y + d.target.y)/2; }); 
 
       this.node
         .selectAll('circle')
