@@ -93,7 +93,7 @@ export class D3Graph extends HTMLElement {
     this._nodeText = textFunc;
     this.node
       .selectAll('text')
-      .text(this._nodeText.bind(this))
+      .text(this._nodeText.bind(this));
   }
 
   set links(linkList) {
@@ -102,6 +102,8 @@ export class D3Graph extends HTMLElement {
     this._links = linkList;    
     this.joinLinks();
 
+    this.addLinkText();
+
     this.render();      
   }
 
@@ -109,7 +111,7 @@ export class D3Graph extends HTMLElement {
     this._linkText = textFunc;
     this.link
       .selectAll('text')
-      .text(this._linkText.bind(this))
+      .text(this._linkText.bind(this));
   }
 
   updateGraph(nodesLinks) {
@@ -152,7 +154,11 @@ export class D3Graph extends HTMLElement {
     this.node = this.node
       .data(this._nodes, d => d.id)
       .join(enter => enter.append("g")
-        .attr("class", "node-group")        
+        .attr("class", "node-group")
+        .call(d3.drag()
+          .on("start", this.dragstarted.bind(this))
+          .on("drag", this.dragged.bind(this))
+          .on("end", this.dragended.bind(this))) 
       );
     
     this.node
