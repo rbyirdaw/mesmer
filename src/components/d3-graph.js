@@ -31,6 +31,13 @@ export class D3Graph extends HTMLElement {
     this._nodes = [];
     this._links = [];
     this.simulation;
+
+    this.colors;
+    this.nodeColor;
+    this.nodeRadius = 25;
+
+    this.linkDistance = 150;
+    this.linkStrength = -150;
   }
 
   connectedCallback() {
@@ -55,13 +62,16 @@ export class D3Graph extends HTMLElement {
         .attr("transform", "translate(" + this.width / 2 + "," + this.height / 2 + ")");
 
       this.simulation = d3.forceSimulation(this._nodes)
-        .force("charge", d3.forceManyBody().strength(-1000))
-        .force("link", d3.forceLink(this._links).distance(50))
+        .force("charge", d3.forceManyBody().strength(this.linkStrength))
+        .force("link", d3.forceLink(this._links).distance(this.linkDistance))
         .force("x", d3.forceX())
         .force("y", d3.forceY())
         .alphaTarget(1)
-        .on("tick", this.ticked.bind(this));
-      
+        .on("tick", this.ticked.bind(this));      
+
+      this.colors = d3.scaleOrdinal(d3.schemePaired);
+      this.nodeColor = (d, i) => this.colors(i);
+
       this.createNodeElements();
       this.createLinkElements();
       this.joinNodes();
@@ -163,12 +173,8 @@ export class D3Graph extends HTMLElement {
     
     this.node
       .append("circle")
-        .attr("r", 8)
-        .attr("fill","aqua")
-        .call(d3.drag()
-          .on("start", this.dragstarted.bind(this))
-          .on("drag", this.dragged.bind(this))
-          .on("end", this.dragended.bind(this))); 
+        .attr("r", this.nodeRadius)
+        .attr("fill", this.nodeColor);
   }
 
   joinLinks() {
@@ -186,12 +192,15 @@ export class D3Graph extends HTMLElement {
     this.node
       .append("text")
         .attr("text-anchor", "middle")
+        .attr("dy", ".35em")
         .text(this._nodeText.bind(this));
   }
 
   addLinkText() {
     this.link
       .append("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", ".35em")
       .text(this._linkText.bind(this));
   }
 
