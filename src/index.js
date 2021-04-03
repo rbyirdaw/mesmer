@@ -63,3 +63,40 @@ structureInfo.addEventListener('structure-fetched', (e) => {
   //DONE :)
 });
 
+const createRangeInput = (min, max, id, label, onChangeCallback) => {
+  const rangeEl = document.createElement('input');
+  rangeEl.setAttribute('type', 'range')
+  rangeEl.setAttribute('min', min || 0);
+  rangeEl.setAttribute('max', max || 1);
+  rangeEl.setAttribute('id', id || "range-id");
+
+  rangeEl.addEventListener('change', onChangeCallback);
+
+  const rangeLabel = document.createElement('label');
+  rangeLabel.innerText = label;
+
+  rangeLabel.appendChild(rangeEl);
+  return rangeLabel;
+
+};
+
+const createGraphControls = () => {
+  const resMaxDistance = createRangeInput(0, 1, "max-distance", 
+      "Maximum distance (Å)", (e) => console.log("Max distance range changed: ", e.target.value));
+  
+  const minResPairGap = createRangeInput(0, 1, "min-res-gap", 
+      "Minimum residue pair gap", (e) => console.log("Minimum residue gap changed: ", e.target.value));
+
+  const controlsWrapper = document.createElement('div');
+  controlsWrapper.setAttribute('id', 'controls-wrapper');
+
+  controlsWrapper.appendChild(resMaxDistance);
+  controlsWrapper.appendChild(minResPairGap);
+
+  const mesmerRoot = document.getElementById('mesmer-root');
+  mesmerRoot.appendChild(controlsWrapper);
+};
+
+window.onload = () => {
+  createGraphControls();
+};
