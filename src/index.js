@@ -19,7 +19,7 @@ let residues;
 let resPairwiseDistances = [];
 let _distCutoff = 5;
 let _maxDistCutoff = 5;
-let _resPairGapMin = 15;
+let _resPairGapMin = 5;
 let _maxResPairGap = 5;
 
 const structureInfo = document.querySelector('select-structure');
@@ -28,8 +28,6 @@ structureInfo.addEventListener('structure-fetched', (e) => {
   const atomLines = getAtomLines(e.detail.value);
   //filter on C-betas
   cBetas = getAtomLinesByAtom('CB', atomLines);
-  //TO-DO: get 3d distances, given atom lines with 3d coords
-  //OR do we make the same table as before
   console.log(cBetas);
 
   residues = getResidues(cBetas);
@@ -37,8 +35,11 @@ structureInfo.addEventListener('structure-fetched', (e) => {
   _maxResPairGap = residues.length - 1;
   console.log(residues);
   
-  //update min res pair gap control
-  document.querySelector("#min-res-gap").setAttribute('max', _maxResPairGap);
+  //update min res pair gap control with initial and max value
+  const minResGapControl = document.querySelector("#min-res-gap");
+  minResGapControl.setAttribute('max', _maxResPairGap);
+  minResGapControl.setAttribute('value', _resPairGapMin);
+  document.querySelector("#min-res-gap-value").innerText = _resPairGapMin;
 
   //Pull out coords for c-betas
   const cBetaCoords = getCoordinates(cBetas);
@@ -50,32 +51,24 @@ structureInfo.addEventListener('structure-fetched', (e) => {
   const allDistances = resPairwiseDistances.flat();
   _maxDistCutoff = Math.floor(Math.max(...allDistances));
   console.log("Max pair-wise distance calculated is ", _maxDistCutoff);
+
   //Now we can update the control
-  document.querySelector("#max-distance").setAttribute('max', _maxDistCutoff);
+  const distCutoffControl = document.querySelector("#max-distance");
+  distCutoffControl.setAttribute('max', _maxDistCutoff);
+  distCutoffControl.setAttribute('value', _distCutoff);
+  document.querySelector("#max-distance-value").innerText = _distCutoff;
 
   //Render default view
   //1. Use residues array to make graph nodes
   //['SER', 'THR', ... 'LYS'] => [ {id: 'SER'}, {id: 'THR'}, ... {id: 'LYS'}]
-  const graphNodes = residues.map((resName, index) => ({id: resName+" "+index}));
+  const graphNodes = residues.map((resName, index) => ({id: resName+" "+(index + 1)}));
   console.log(graphNodes);
+
   //2. Use pairwise distances to make links
   //[[p1p2, p1p3, p1p4,...], [p2p3]]
-  // let distCutoff = 5;
-  // let graphLinks = [];
-  // resPairwiseDistances.forEach((singleDist, i) => {
-  //   singleDist.forEach((dist, j) => {
-  //     if (!distCutoff || (distCutoff && dist <= distCutoff)) {
-  //       graphLinks.push({"source": i, "target": j + 1, "dist": dist})
-  //     }
-  //   });
-  // });
-  // console.log(graphLinks);
   const graphLinks = getMesmerGraphLinks(resPairwiseDistances, 5, 4);
 
   //3. Render
-  // mesmerGraph.nodes = graphNodes;
-  // mesmerGraph.links = graphLinks;
-  // mesmerGraph.linkText = d => d.dist;
   renderMesmerGraph(graphNodes, graphLinks, d => d.dist);
 
   //DONE :)
@@ -110,13 +103,20 @@ const createRangeInput = (min, max, id, label, onChangeCallback) => {
   rangeEl.setAttribute('type', 'range')
   rangeEl.setAttribute('min', min || 0);
   rangeEl.setAttribute('max', max || 1);
+  rangeEl.setAttribute('step', 1);
   rangeEl.setAttribute('id', id || "range-id");
 
   rangeEl.addEventListener('change', onChangeCallback);
 
+  const rangeValue = document.createElement('span');
+  rangeValue.setAttribute('id', id+'-value');
+  rangeValue.innerText = 0;
+
   const rangeLabel = document.createElement('label');
+  rangeLabel.setAttribute('id', id+"-wrapper");
   rangeLabel.innerText = label;
 
+  rangeLabel.appendChild(rangeValue);
   rangeLabel.appendChild(rangeEl);
   return rangeLabel;
 
@@ -124,10 +124,10 @@ const createRangeInput = (min, max, id, label, onChangeCallback) => {
 
 const createGraphControls = () => {
   const resMaxDistance = createRangeInput(1, _maxDistCutoff, "max-distance", 
-      "Maximum distance (Å)", onMaxDistanceChange);
+      "Maximum distance (Å): ", onMaxDistanceChange);
   
   const minResPairGap = createRangeInput(1, _maxResPairGap, "min-res-gap", 
-      "Minimum residue pair gap", onMinResGapChange);
+      "Minimum residue pair gap: ", onMinResGapChange);
 
   const controlsWrapper = document.createElement('div');
   controlsWrapper.setAttribute('id', 'controls-wrapper');
@@ -142,6 +142,8 @@ const createGraphControls = () => {
 const onMaxDistanceChange = (e) => {
   _distCutoff = e.target.value;
   console.log("Max distance range changed: ", _distCutoff);
+  //update value displayed (span is sibling element)
+  e.target.previousElementSibling.innerText = _distCutoff;
   //get new links using new maximum distance
   const graphLinks = getMesmerGraphLinks(resPairwiseDistances, _distCutoff, _resPairGapMin);
   //replot
@@ -152,6 +154,8 @@ const onMaxDistanceChange = (e) => {
 const onMinResGapChange = (e) => {
   _resPairGapMin = e.target.value;
   console.log("Minimum residue gap changed: ", e.target.value);
+  //update value displayed (span is sibling element)
+  e.target.previousElementSibling.innerText = _resPairGapMin;  
   //get new links using new res pair gap minimum
   const graphLinks = getMesmerGraphLinks(resPairwiseDistances, _distCutoff, _resPairGapMin);
   //replot
