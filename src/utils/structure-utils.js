@@ -31,10 +31,17 @@ export const getResidues = (atomLinesArray) => {
   // Given array of atomic coordinates, from full structure
   // i.e., "ATOM 54 C C TRP 4 . . A 1 -4.328 -2.716 -0.248 1 0 ? C TRP 4 A 1 ",
   // return array of residues
+  // i.e.,  ["SER", "TRP", "THR",...]
 
   let residues = [];
   if (atomLinesArray.length > 0) {
-    residues = atomLinesArray.map((el) => el.split(' ')[4]);
+    residues = atomLinesArray.map((el) => {
+      if (!el) {
+        return;
+      }
+      const lineArray = el.split(' ');
+      return lineArray.length > 4 ? lineArray[4] : undefined;
+    });
   }
 
   return residues;
@@ -48,6 +55,9 @@ export const getCoordinates = (atomLinesArray) => {
   let coords = [];
   if (atomLinesArray.length > 0) {
     coords = atomLinesArray.map((el) => {
+      if (!el) {
+        return;
+      }
       const lineArray = el.split(' ');
       const x = lineArray[10];
       const y = lineArray[11];
@@ -72,9 +82,15 @@ export const calcPairwiseDistances = (coords) => {
 
     for (let i = 0; i < numObjects - 1; i++) {
       const obj1 = coords[i];
+      if (!obj1) {
+        continue
+      }
       let singleDist = [];
       for (let j = i + 1; j < numObjects; j++) {
         const obj2 = coords[j];
+        if (!obj2) {
+          continue
+        }
         const dist = Math.sqrt(Math.pow((obj2.x - obj1.x), 2) +
             Math.pow((obj2.y - obj1.y), 2) + 
             Math.pow((obj2.z - obj1.z), 2));

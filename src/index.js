@@ -14,6 +14,7 @@ document.getElementById('mesmer-root')
 
 const mesmerGraph = document.querySelector('d3-graph');
 //active values - Mesmer states
+let cAlphas;
 let cBetas;
 let residues;
 let resPairwiseDistances = [];
@@ -26,9 +27,23 @@ const structureInfo = document.querySelector('select-structure');
 structureInfo.addEventListener('structure-fetched', (e) => {
   //atoms from response
   const atomLines = getAtomLines(e.detail.value);
-  //filter on C-betas
+  
+  //get C-alphas
+  cAlphas = getAtomLinesByAtom('CA', atomLines);
+  console.log("cAlphas - ", cAlphas);
+  //get C-betas
   cBetas = getAtomLinesByAtom('CB', atomLines);
-  console.log(cBetas);
+  console.log("cBetas - ", cBetas);
+
+  //see if we have all atoms to calculate pair-wise distances
+  if (cAlphas.length > cBetas.length) {
+    //adjust for GLY
+    cAlphas.forEach((cAlphaLine, index) => {
+      if (cAlphaLine.includes('GLY')) {
+        cBetas.splice(index, 0, cAlphaLine);      
+      }
+    });
+  }
 
   residues = getResidues(cBetas);
   //maximum res pair gap
@@ -41,11 +56,13 @@ structureInfo.addEventListener('structure-fetched', (e) => {
   minResGapControl.setAttribute('value', _resPairGapMin);
   document.querySelector("#min-res-gap-value").innerText = _resPairGapMin;
 
-  //Pull out coords for c-betas
-  const cBetaCoords = getCoordinates(cBetas);
-  console.log(cBetaCoords);
+  //Pull out coords for reference atoms
+  const refAtomCoords = getCoordinates(cBetas);
+  console.log(refAtomCoords);
+
+
   //Calc pairwise distances
-  resPairwiseDistances = calcPairwiseDistances(cBetaCoords);
+  resPairwiseDistances = calcPairwiseDistances(refAtomCoords);
   console.log(resPairwiseDistances);
   //Next get maximum distance calculated
   const allDistances = resPairwiseDistances.flat();
@@ -84,7 +101,7 @@ const getMesmerGraphLinks = (resPairwiseDistances, distCutoffNew, resPairGapMinN
     singleDist.forEach((dist, j) => {
       const res2Index = j + 1;
       if (!distCutoff || (distCutoff && dist <= distCutoff) && (res2Index - res1Index >= resPairGapMin)) {
-        graphLinks.push({"source": res1Index, "target": res2Index, "dist": dist})
+        graphLinks.push({"source": res1Index, "target": res2Index, "dist": dist.toFixed(3)})
       }
     });
   });
