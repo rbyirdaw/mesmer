@@ -10,6 +10,17 @@ const config = {
   devtool: 'inline-source-map',
   devServer: {
     open: true
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      }
+    ]
   }
 };
 
