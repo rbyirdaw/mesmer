@@ -1,13 +1,21 @@
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { D3Graph } from './components/d3-graph';
 import { SelectStructure } from './components/select-structure';
 import { getAtomLines, getAtomLinesByAtom, getResidues, getCoordinates, calcPairwiseDistances } from './utils/structure-utils';
+import { SpinnerElement } from './components/spinner-element';
 
-//customElements.define('pdb-search', PdbSearch);
+customElements.define('spinner-element', SpinnerElement);
 customElements.define('select-structure', SelectStructure);
 customElements.define('d3-graph', D3Graph);
 document.getElementById('mesmer-root')
   .innerHTML = `
+    <style>
+      #mesmer-root {
+        position: relative;
+      }
+    </style>
+    <spinner-element></spinner-element>
     <select-structure></select-structure>
     <d3-graph width="600" height="400"></d3-graph>
   `;
@@ -23,7 +31,13 @@ let _maxDistCutoff = 5;
 let _resPairGapMin = 5;
 let _maxResPairGap = 5;
 
+const spinnerEl = document.querySelector('spinner-element');
+
 const structureInfo = document.querySelector('select-structure');
+structureInfo.addEventListener('show-spinner', (e) => {
+  spinnerEl.enabled = e.detail.value;
+});
+
 structureInfo.addEventListener('structure-fetched', (e) => {
   //atoms from response
   const atomLines = getAtomLines(e.detail.value);
