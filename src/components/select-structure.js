@@ -21,23 +21,23 @@ export class SelectStructure extends HTMLElement {
     console.log("Got pdb selection: ", pdbId);
     this.querySelector('structure-info').setAttribute('pdb-id', pdbId);
     
-    this.showSpinner(true);
+    this.dispatchXhrStateEvent(true);
 
     getProteinStructure(pdbId).then( (fullStructure) => {
+      this.dispatchXhrStateEvent(false);
       this.dispatchEvent(new CustomEvent('structure-fetched', {
         detail: {
           value: fullStructure
         },
         bubbles: true
       }));
-      this.showSpinner(false);
     })
   }
 
-  showSpinner(enabled) {
-    this.dispatchEvent(new CustomEvent('show-spinner', {
+  dispatchXhrStateEvent(state) {
+    this.dispatchEvent(new CustomEvent('xhr-state', {
       detail: {
-        value: enabled
+        value: state
       },
       bubbles: true
     }));

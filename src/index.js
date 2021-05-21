@@ -4,8 +4,10 @@ import { D3Graph } from './components/d3-graph';
 import { SelectStructure } from './components/select-structure';
 import { getAtomLines, getAtomLinesByAtom, getResidues, getCoordinates, calcPairwiseDistances } from './utils/structure-utils';
 import { SpinnerElement } from './components/spinner-element';
+import { AlertElement } from './components/alert-element';
 
 customElements.define('spinner-element', SpinnerElement);
+customElements.define('alert-element', AlertElement);
 customElements.define('select-structure', SelectStructure);
 customElements.define('d3-graph', D3Graph);
 document.getElementById('mesmer-root')
@@ -15,6 +17,7 @@ document.getElementById('mesmer-root')
         position: relative;
       }
     </style>
+    <alert-element></alert-element>
     <spinner-element></spinner-element>
     <select-structure></select-structure>
     <d3-graph width="600" height="400"></d3-graph>
@@ -30,11 +33,15 @@ let _distCutoff = 5;
 let _maxDistCutoff = 5;
 let _resPairGapMin = 5;
 let _maxResPairGap = 5;
+const MIN_RESIDUES = 4;
+const MAX_RESIDUES = 80;
+
+
 
 const spinnerEl = document.querySelector('spinner-element');
 
 const structureInfo = document.querySelector('select-structure');
-structureInfo.addEventListener('show-spinner', (e) => {
+structureInfo.addEventListener('xhr-state', (e) => {
   spinnerEl.enabled = e.detail.value;
 });
 
@@ -60,49 +67,62 @@ structureInfo.addEventListener('structure-fetched', (e) => {
   }
 
   residues = getResidues(cBetas);
-  //maximum res pair gap
-  _maxResPairGap = residues.length - 1;
-  console.log(residues);
-  
-  //update min res pair gap control with initial and max value
-  const minResGapControl = document.querySelector("#min-res-gap");
-  minResGapControl.setAttribute('max', _maxResPairGap);
-  minResGapControl.setAttribute('value', _resPairGapMin);
-  document.querySelector("#min-res-gap-value").innerText = _resPairGapMin;
+  const numResidues = residues.length;
+  console.log("Number of residues: ", numResidues);
+  if (numResidues < MIN_RESIDUES) { 
+    console.warn("Error with structure.");
+    showAlert("error", "Number of residues < " + MIN_RESIDUES);
+  } else if (numResidues > MAX_RESIDUES) {
+    //show alert
+    console.warn("Number of residues is too large.");
+    showAlert("error", "Number of residues > " + MAX_RESIDUES);
+  } else {
+    //continue on
+    //maximum res pair gap
+    _maxResPairGap = residues.length - 1;
+    console.log(residues);
+    
+    //update min res pair gap control with initial and max value
+    const minResGapControl = document.querySelector("#min-res-gap");
+    minResGapControl.setAttribute('max', _maxResPairGap);
+    minResGapControl.setAttribute('value', _resPairGapMin);
+    document.querySelector("#min-res-gap-value").innerText = _resPairGapMin;
 
-  //Pull out coords for reference atoms
-  const refAtomCoords = getCoordinates(cBetas);
-  console.log(refAtomCoords);
+    //Pull out coords for reference atoms
+    const refAtomCoords = getCoordinates(cBetas);
+    console.log(refAtomCoords);
 
 
-  //Calc pairwise distances
-  resPairwiseDistances = calcPairwiseDistances(refAtomCoords);
-  console.log(resPairwiseDistances);
-  //Next get maximum distance calculated
-  const allDistances = resPairwiseDistances.flat();
-  _maxDistCutoff = Math.floor(Math.max(...allDistances));
-  console.log("Max pair-wise distance calculated is ", _maxDistCutoff);
+    //Calc pairwise distances
+    resPairwiseDistances = calcPairwiseDistances(refAtomCoords);
+    console.log(resPairwiseDistances);
+    //Next get maximum distance calculated
+    const allDistances = resPairwiseDistances.flat();
+    _maxDistCutoff = Math.floor(Math.max(...allDistances));
+    console.log("Max pair-wise distance calculated is ", _maxDistCutoff);
 
-  //Now we can update the control
-  const distCutoffControl = document.querySelector("#max-distance");
-  distCutoffControl.setAttribute('max', _maxDistCutoff);
-  distCutoffControl.setAttribute('value', _distCutoff);
-  document.querySelector("#max-distance-value").innerText = _distCutoff;
+    //Now we can update the control
+    const distCutoffControl = document.querySelector("#max-distance");
+    distCutoffControl.setAttribute('max', _maxDistCutoff);
+    distCutoffControl.setAttribute('value', _distCutoff);
+    document.querySelector("#max-distance-value").innerText = _distCutoff;
 
-  //Render default view
-  //1. Use residues array to make graph nodes
-  //['SER', 'THR', ... 'LYS'] => [ {id: 'SER'}, {id: 'THR'}, ... {id: 'LYS'}]
-  const graphNodes = residues.map((resName, index) => ({id: resName+" "+(index + 1)}));
-  console.log(graphNodes);
+    //Render default view
+    //1. Use residues array to make graph nodes
+    //['SER', 'THR', ... 'LYS'] => [ {id: 'SER'}, {id: 'THR'}, ... {id: 'LYS'}]
+    const graphNodes = residues.map((resName, index) => ({id: resName+" "+(index + 1)}));
+    console.log(graphNodes);
 
-  //2. Use pairwise distances to make links
-  //[[p1p2, p1p3, p1p4,...], [p2p3]]
-  const graphLinks = getMesmerGraphLinks(resPairwiseDistances, 5, 4);
+    //2. Use pairwise distances to make links
+    //[[p1p2, p1p3, p1p4,...], [p2p3]]
+    const graphLinks = getMesmerGraphLinks(resPairwiseDistances, 5, 4);
 
-  //3. Render
-  renderMesmerGraph(graphNodes, graphLinks, d => d.dist);
+    //3. Render
+    renderMesmerGraph(graphNodes, graphLinks, d => d.dist);
 
-  //DONE :)
+    //DONE :)    
+  }
+
 });
 
 const getMesmerGraphLinks = (resPairwiseDistances, distCutoffNew, resPairGapMinNew) => {
@@ -193,6 +213,12 @@ const onMinResGapChange = (e) => {
   renderMesmerGraph(undefined, graphLinks, undefined);
 }
 
+const showAlert = (alertType, alertText) => {
+  const alertEl = document.querySelector('alert-element');
+  alertEl.alertText = alertText;
+  alertEl.alertType = alertType;
+  alertEl.enabled = true;  
+}
 window.onload = () => {
   createGraphControls();
 };
