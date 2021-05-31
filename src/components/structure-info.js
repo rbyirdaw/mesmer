@@ -5,6 +5,12 @@ componentHtml.innerHTML = `
   <heading>Structure Information</heading>
   <div>PDB Id: <span id="pdb-id"></span></div>
   <div>Citation: <span id="citation"></span></div>
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+
 `;
 
 export class StructureInfo extends HTMLElement {

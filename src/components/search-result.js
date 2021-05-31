@@ -2,7 +2,34 @@
 import { SearchResultItem } from './search-result-item';
 
 const componentHtml = document.createElement('template');
-componentHtml.innerHTML = `<ul></ul>`;
+componentHtml.innerHTML = `
+  <ul></ul>
+  <style>
+    ul {
+      position: absolute;
+      background-color: #ececec;
+      margin-top: 0;
+      width: 100%;
+    }
+    
+    li {
+      list-style-type: none;   
+      width: 80%;
+      margin: 1rem;
+      border: 1px solid #ccc;
+      display: inline-block;
+    }
+    li:hover {
+      background-color: #ccc;
+      cursor: pointer;
+    }
+    @media (min-width: 768px) {
+      li {
+        width: 15%;
+      }
+    }
+  </style>
+  `;
 
 export class SearchResult extends HTMLElement {
   constructor() {

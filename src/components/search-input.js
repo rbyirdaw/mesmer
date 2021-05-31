@@ -3,6 +3,10 @@ componentHtml.innerHTML = `
   <style>
     label {
       display: block;
+      width: 100%;
+    }
+    input {
+      width: 100%;
     }
   </style>
   <label for="search-input"></label>
