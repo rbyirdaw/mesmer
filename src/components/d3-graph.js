@@ -11,6 +11,10 @@ componentHtml.innerHTML = `
       stroke: none;
       stroke-width: 40px;
     }
+    .node-group circle:hover,
+    .node-group text:hover {
+      cursor: pointer;
+    }
   </style>
   <div id='d3-graph-container'></div>
 `;
@@ -44,18 +48,6 @@ export class D3Graph extends HTMLElement {
     this.shadowRootRef.querySelector('#d3-graph-container')
       .innerHTML = `<svg width=${this.getAttribute('width')} height=${this.getAttribute('height')}></svg>`;
 
-    this._nodes = [
-      {id: "A"},
-      {id: "B"},
-      {id: "C"}
-    ];
-
-
-    this._links = [
-      {"source": 0, "target": 1},
-      {"source": 1, "target": 2} 
-    ];
-
     if (d3) {
       this.svg = d3.select(this.shadowRootRef.querySelector('svg'));
       this.svg.append("g")
@@ -67,23 +59,16 @@ export class D3Graph extends HTMLElement {
         .force("x", d3.forceX())
         .force("y", d3.forceY())
         .alphaTarget(1)
-        .on("tick", this.ticked.bind(this));      
+        .on("tick", this.ticked);      
 
       this.colors = d3.scaleOrdinal(d3.schemePaired);
       this.nodeColor = (d, i) => this.colors(i);
 
       this.createNodeElements();
       this.createLinkElements();
-      this.joinNodes();
-      this.joinLinks();
 
       this._linkText = (d) => d.source.id + " - " + d.target.id;
       this._nodeText = (d) => d.id;
-
-      this.addNodeText();
-      this.addLinkText();
-
-      this.render();
     }
   }
 
@@ -103,7 +88,7 @@ export class D3Graph extends HTMLElement {
     this._nodeText = textFunc;
     this.node
       .selectAll('text')
-      .text(this._nodeText.bind(this));
+      .text(this._nodeText);
   }
 
   set links(linkList) {
@@ -121,7 +106,7 @@ export class D3Graph extends HTMLElement {
     this._linkText = textFunc;
     this.link
       .selectAll('text')
-      .text(this._linkText.bind(this));
+      .text(this._linkText);
   }
 
   updateGraph(nodesLinks) {
@@ -166,9 +151,9 @@ export class D3Graph extends HTMLElement {
       .join(enter => enter.append("g")
         .attr("class", "node-group")
         .call(d3.drag()
-          .on("start", this.dragstarted.bind(this))
-          .on("drag", this.dragged.bind(this))
-          .on("end", this.dragended.bind(this))) 
+          .on("start", this.dragStarted)
+          .on("drag", this.dragged)
+          .on("end", this.dragEnded)) 
       );
     
     this.node
@@ -193,7 +178,7 @@ export class D3Graph extends HTMLElement {
       .append("text")
         .attr("text-anchor", "middle")
         .attr("dy", ".35em")
-        .text(this._nodeText.bind(this));
+        .text(this._nodeText);
   }
 
   addLinkText() {
@@ -201,10 +186,10 @@ export class D3Graph extends HTMLElement {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("dy", ".35em")
-      .text(this._linkText.bind(this));
+      .text(this._linkText);
   }
 
-  ticked() {
+  ticked = () => {
     try {
       this.link
         .selectAll('line')
@@ -234,22 +219,23 @@ export class D3Graph extends HTMLElement {
 
   }
 
-  dragstarted(d) {
+  dragStarted = (d) => {
     if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
 
-  dragged(d) {
+  dragged = (d) => {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
   }
 
-  dragended(d) {
+  dragEnded = (d) => {
     if (!d3.event.active) this.simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
   }
+
 
   render() {
     this.simulation.nodes(this._nodes);
