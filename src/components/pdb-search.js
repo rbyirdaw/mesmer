@@ -31,7 +31,10 @@ export class PdbSearch extends HTMLElement {
           .then(pdbList => {
             const pdbs = pdbList.result_set.map(el => el.identifier);
             textSearchEl.resultList = pdbs;
-          });         
+          })
+          .catch (error => {
+            this.dispatchPdbSearchError(error);
+          })          
       }
     });
 
@@ -51,6 +54,15 @@ export class PdbSearch extends HTMLElement {
     }));
   }
 
+  dispatchPdbSearchError(err) {
+    this.dispatchEvent(new CustomEvent('pdb-search-error', {
+      detail: {
+        value: err
+      },
+      bubbles: true
+    }))
+  }
+  
   render() {
     this.innerHTML = `
       <text-search main-label="Search PDB"></text-search>
