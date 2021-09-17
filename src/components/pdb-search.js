@@ -19,7 +19,7 @@ export class PdbSearch extends HTMLElement {
         let pdbSearchObj = {
           "query": {
             "type": "terminal",
-            "service":  "text",
+            "service":  "full_text",
             "parameters": {
               "value": e.detail.value
             }          
