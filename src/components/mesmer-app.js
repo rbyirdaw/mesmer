@@ -40,6 +40,14 @@ export default class MesmerApp extends HTMLElement {
     mesmerStruct.addEventListener('pdb-search-error', (e) => {
       this.showAlert('error', 'Pdb search error.');
     });
+
+    mesmerStruct.addEventListener('got-residue-stats', (e) => {
+      console.log("mesmer struct got residue stats: ", e.detail.value);
+    });
+
+    mesmerStruct.addEventListener('got-pairwise-dist-stats', (e) => {
+      console.log("mesmer struct got residue stats: ", e.detail.value);
+    })
   }
 
   showAlert = (alertType, alertText) => {
