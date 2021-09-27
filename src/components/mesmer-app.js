@@ -10,6 +10,7 @@ appHtml.innerHTML = `
   <alert-element></alert-element>
   <spinner-element></spinner-element>
   <mesmer-protein-structure></mesmer-protein-structure>
+  <mesmer-graph></mesmer-graph>
 `;
 
 export default class MesmerApp extends HTMLElement {
@@ -25,31 +26,35 @@ export default class MesmerApp extends HTMLElement {
     customElements.define('spinner-element', SpinnerElement);
     customElements.define('alert-element', AlertElement);
     customElements.define('mesmer-protein-structure', MesmerProteinStructure);
-
+    customElements.define('mesmer-graph', MesmerGraph);
   }
 
   connectedCallback() {    
     const spinnerEl = this.shadowRootRef.querySelector('spinner-element');
-
     const mesmerStruct = this.shadowRootRef.querySelector('mesmer-protein-structure');
+    const mesmerGraph = this.shadowRootRef.querySelector('mesmer-graph');
+
     mesmerStruct.addEventListener('xhr-state', (e) => {
       spinnerEl.enabled = e.detail.value;
       console.log("mesmer struct ", e.detail.value)
     });
-
     mesmerStruct.addEventListener('pdb-search-error', (e) => {
       this.showAlert('error', 'Pdb search error.');
     });
-
     mesmerStruct.addEventListener('got-residue-stats', (e) => {
       console.log("mesmer struct got residue stats: ", e.detail.value);
+      const residueStats = e.detail.value;      
+      mesmerGraph.residues = residueStats.residues;
     });
-
     mesmerStruct.addEventListener('got-pairwise-dist-stats', (e) => {
       console.log("mesmer struct got residue stats: ", e.detail.value);
-    })
+      const pairwiseDistStats = e.detail.value;
+      mesmerGraph.resPairwiseDistances = pairwiseDistStats.resPairwiseDistances;
+    });
+
   }
 
+  // UX
   showAlert = (alertType, alertText) => {
     const alertEl = this.shadowRootRef.querySelector('alert-element');
     alertEl.alertText = alertText;
