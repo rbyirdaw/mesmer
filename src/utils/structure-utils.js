@@ -7,9 +7,15 @@ export const getAtomLines = (fullStructure) => {
 
   if (typeof fullStructure === 'string') {
     const firstAtom = fullStructure.indexOf('ATOM');
-    const lastAtom = fullStructure.indexOf('HETATM');
-    const atomLines = firstAtom && lastAtom && fullStructure.substring(firstAtom, lastAtom);
-    const atomLinesArray = atomLines && atomLines.split('\n');   
+    const fullAtomLinesArray = fullStructure.substring(firstAtom).split('\n');
+    let atomLinesArray = [];
+    if (fullAtomLinesArray && fullAtomLinesArray.length > 0) {
+      atomLinesArray = fullAtomLinesArray.filter(el => {
+        const elTrimmed = el.trim();
+        return (/^ATOM \d* .* A 1$/).test(elTrimmed);        
+      });
+    }
+ 
     return atomLinesArray;
   }
 };

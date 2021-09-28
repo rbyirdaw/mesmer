@@ -29,9 +29,9 @@ export default class MesmerProteinStructure extends HTMLElement {
     }));
   }
 
-  processStructure(structAtoms) {
+  processStructure(fullStructure) {
     //atoms from response
-    const atomLines = getAtomLines(structAtoms);
+    const atomLines = getAtomLines(fullStructure);
     
     //get C-alphas
     const cAlphas = getAtomLinesByAtom('CA', atomLines);
