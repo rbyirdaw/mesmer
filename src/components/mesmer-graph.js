@@ -9,6 +9,10 @@ export default class MesmerGraph extends HTMLElement {
     this.nodes;
     this.links;
     this.linkText = d => d.dist;
+
+    this._distCutoff = 5;
+    this._resPairGapMin = 4;
+
     this.registerDependencies();
     this.render();
   }
@@ -20,8 +24,20 @@ export default class MesmerGraph extends HTMLElement {
   }
 
   set resPairwiseDistances(pairwiseDist) {
-    this._resPairwiseDistance = pairwiseDist;
-    this.links = this.pairwiseDistToLinks(this._resPairwiseDistance);
+    this._resPairwiseDistances = pairwiseDist;
+    this.links = this.getMesmerGraphLinks();
+    this.renderD3Graph();
+  }
+
+  set distCutoff(value) {
+    this._distCutoff = value;
+    this.links = this.getMesmerGraphLinks();
+    this.renderD3Graph();
+  }
+
+  set resPairGapMin(value) {
+    this._resPairGapMin = value;
+    this.links = this.getMesmerGraphLinks();
     this.renderD3Graph();
   }
 
@@ -50,12 +66,12 @@ export default class MesmerGraph extends HTMLElement {
     return graphLinks;
   }
 
-  getMesmerGraphLinks(resPairwiseDistances, distCutoffNew, resPairGapMinNew) {
-    const distCutoff = distCutoffNew || _distCutoff;
-    const resPairGapMin = resPairGapMinNew || _resPairGapMin;
+  getMesmerGraphLinks() {
+    const distCutoff = this._distCutoff;
+    const resPairGapMin = this._resPairGapMin;
   
     let graphLinks = [];
-    resPairwiseDistances.forEach((singleDist, i) => {
+    this._resPairwiseDistances.forEach((singleDist, i) => {
       const res1Index = i;
       singleDist.forEach((dist, j) => {
         const res2Index = j + 1;
