@@ -44,9 +44,10 @@ export default class MesmerProteinStructure extends HTMLElement {
     const residueStats = this.getResidueStats(cBetasAdjusted);
     this.dispatchCustomEvent('got-residue-stats', residueStats);
 
-    const pairwiseDistStats = this.getPairwiseDistStats(cBetasAdjusted);    
-    this.dispatchCustomEvent('got-pairwise-dist-stats', pairwiseDistStats);
-    
+    if (residueStats.numResidues > 1)  {
+      const pairwiseDistStats = this.getPairwiseDistStats(cBetasAdjusted);    
+      this.dispatchCustomEvent('got-pairwise-dist-stats', pairwiseDistStats);  
+    }    
   }
 
   adjustForGly(cAlphas, cBetas) {

@@ -2,7 +2,7 @@ import { SpinnerElement } from './spinner-element';
 import { AlertElement } from './alert-element';
 import MesmerProteinStructure from './mesmer-protein-structure';
 import MesmerGraph from './mesmer-graph';
-import MesmerGraphControls from './memser-graph-controls';
+import MesmerGraphControls from './mesmer-graph-controls';
 
 let appHtml = document.createElement('template');
 appHtml.innerHTML = `
@@ -21,6 +21,8 @@ export default class MesmerApp extends HTMLElement {
     this.registerDependencies();
     this.shadowRootRef = this.attachShadow({mode: 'open'});
     this.shadowRootRef.appendChild(appHtml.content.cloneNode(true));
+
+    this.MAX_RESIDUES = 200;
   }
 
   registerDependencies() {
@@ -46,10 +48,16 @@ export default class MesmerApp extends HTMLElement {
     });
     mesmerStruct.addEventListener('got-residue-stats', (e) => {
       console.log("mesmer struct got residue stats: ", e.detail.value);
-      const residueStats = e.detail.value;      
-      mesmerGraph.residues = residueStats.residues;
+      const { residues, numResidues } = e.detail.value;      
+      mesmerGraph.residues = residues;
 
-      mesmerGraphControls.maxResPairGap = residueStats.numResidues - 1;
+      mesmerGraphControls.maxResPairGap = numResidues - 1;
+
+      if (numResidues > this.MAX_RESIDUES) {
+        this.showAlert('warning', 'Max number of residues exceeded: '+ numResidues);
+      } else if (numResidues < 1) {
+        this.showAlert('error', 'Invalid number of residues: ' + numResidues);
+      }
     });
     mesmerStruct.addEventListener('got-pairwise-dist-stats', (e) => {
       console.log("mesmer struct got residue stats: ", e.detail.value);
