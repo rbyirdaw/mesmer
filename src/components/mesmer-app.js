@@ -4,25 +4,19 @@ import MesmerProteinStructure from './mesmer-protein-structure';
 import MesmerGraph from './mesmer-graph';
 import MesmerGraphControls from './mesmer-graph-controls';
 
-let appHtml = document.createElement('template');
-appHtml.innerHTML = `
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-  <alert-element></alert-element>
-  <spinner-element></spinner-element>
-  <mesmer-protein-structure></mesmer-protein-structure>
-  <mesmer-graph></mesmer-graph>
-  <mesmer-graph-controls></mesmer-graph-controls>
-`;
-
 export default class MesmerApp extends HTMLElement {
   constructor() {
     super();
 
     this.registerDependencies();
     this.shadowRootRef = this.attachShadow({mode: 'open'});
-    this.shadowRootRef.appendChild(appHtml.content.cloneNode(true));
+
+    this.graphHeight = this.getAttribute('graph-height');
+    this.graphWidth = this.getAttribute('graph-width');
 
     this.MAX_RESIDUES = 200;
+
+    this.render();
   }
 
   registerDependencies() {
@@ -84,6 +78,18 @@ export default class MesmerApp extends HTMLElement {
     alertEl.alertText = alertText;
     alertEl.alertType = alertType;
     alertEl.enabled = true;  
+  }
+
+  render() {
+    this.shadowRootRef.innerHTML = `
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+      <alert-element></alert-element>
+      <spinner-element></spinner-element>
+      <mesmer-protein-structure></mesmer-protein-structure>
+      <mesmer-graph graph-width=${this.graphWidth} graph-height=${this.graphHeight}></mesmer-graph>
+      <mesmer-graph-controls></mesmer-graph-controls>    
+    `;
+
   }
 
 }

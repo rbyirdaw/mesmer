@@ -13,8 +13,19 @@ export default class MesmerGraph extends HTMLElement {
     this._distCutoff = 5;
     this._resPairGapMin = 4;
 
+    this.graphHeight = this.getHeight();
+    this.graphWidth = this.getWidth();
+
     this.registerDependencies();
     this.render();
+  }
+
+  getWidth() {
+    return this.getAttribute('graph-width') | window.innerWidth;
+  }
+
+  getHeight() {
+    return this.getAttribute('graph-height') | window.innerHeight;
   }
   
   set residues(res) {
@@ -91,6 +102,6 @@ export default class MesmerGraph extends HTMLElement {
   };
 
   render() {
-    this.innerHTML = `<d3-graph width="600" height="400"></d3-graph`;
+    this.innerHTML = `<d3-graph width=${this.graphWidth} height=${this.graphHeight}></d3-graph`;
   }
 }
