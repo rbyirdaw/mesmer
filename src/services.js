@@ -7,13 +7,15 @@ const httpClient = (url, requestOptions) => {
   return fetch(url, requestOptions);  
 };
 
+let pdbSearchAbortController = new AbortController();
 export const searchPdbEntry = (searchValue) => {
-
+  pdbSearchAbortController.abort();
+  pdbSearchAbortController = new AbortController();
   let encodedSearchValue = encodeURI(JSON.stringify(searchValue));
   //let response = await httpClient(pdbSearchApi + `%7B"query":%7B"type":"terminal","service":"text","parameters":%7B"value":"thymidine%20kinase"%7D%7D,"return_type":"entry"%7D`);
 
   return new Promise((resolve, reject) => {
-    httpClient(pdbSearchApi + encodedSearchValue)
+    httpClient(pdbSearchApi + encodedSearchValue, { signal: pdbSearchAbortController.signal })
       .then(response => {
         const contentType = response.headers.get('content-type');
         if (!response.ok || !contentType || !contentType.includes('application/json')) {
