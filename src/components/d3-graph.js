@@ -46,7 +46,7 @@ export class D3Graph extends HTMLElement {
 
   connectedCallback() {
     this.shadowRootRef.querySelector('#d3-graph-container')
-      .innerHTML = `<svg width=${this.getAttribute('width')} height=${this.getAttribute('height')}></svg>`;
+      .innerHTML = `<svg viewbox="${0} ${0} ${this.width} ${this.height}"></svg>`;
 
     if (d3) {
       this.svg = d3.select(this.shadowRootRef.querySelector('svg'));
@@ -70,6 +70,10 @@ export class D3Graph extends HTMLElement {
       this._linkText = (d) => d.source.id + " - " + d.target.id;
       this._nodeText = (d) => d.id;
     }
+  }
+
+  disconnectedCallback() {
+    console.log("%c D3 graph removed.", "color: white; background-color: salmon");
   }
 
   set nodes(nodeList) {
