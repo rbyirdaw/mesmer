@@ -9,7 +9,8 @@ const config = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    open: true
+    open: true,
+    static: './'
   },
   module: {
     rules: [
