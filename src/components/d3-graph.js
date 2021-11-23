@@ -15,6 +15,9 @@ componentHtml.innerHTML = `
     .node-group text:hover {
       cursor: pointer;
     }
+    #d3-graph-container {
+      border: 4px solid #ccc;
+    }
   </style>
   <div id='d3-graph-container'></div>
 `;

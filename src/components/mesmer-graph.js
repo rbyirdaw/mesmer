@@ -21,11 +21,19 @@ export default class MesmerGraph extends HTMLElement {
   }
 
   getWidth() {
-    return this.getAttribute('graph-width') | window.innerWidth;
+    let width = this.getAttribute('graph-width');
+    if (width === "null") {
+      width = window.innerWidth;
+    }
+    return width;
   }
 
   getHeight() {
-    return this.getAttribute('graph-height') | window.innerHeight;
+    let height = this.getAttribute('graph-height');
+    if (height === "null") {
+      height = window.innerHeight - 250;
+    }
+    return height;
   }
   
   set residues(res) {
