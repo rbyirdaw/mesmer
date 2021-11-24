@@ -84,14 +84,26 @@ export default class MesmerProteinStructure extends HTMLElement {
     //Calc pairwise distances
     const resPairwiseDistances = calcPairwiseDistances(refAtomCoords);
 
-    const allDistances = resPairwiseDistances.flat();
-    const _maxDistCutoff = Math.floor(Math.max(...allDistances));
+    const allDistances = resPairwiseDistances.flat(); 
+    const _maxDistCutoff = this.getMaxDistCutoff(allDistances);
     console.log("Max pair-wise distance calculated is ", _maxDistCutoff);
 
     return {
       "resPairwiseDistances": resPairwiseDistances,
       "maxDistCutoff": _maxDistCutoff
     };
+  }
+
+  getMaxDistCutoff = (dist) => {
+    try {
+      return Math.floor(
+        dist.reduce((a, b) => Math.max(a,b), 0)
+      );
+    } catch (ex) {
+      console.log("Exception calculating max distance cutoff: ", ex);
+      return null;
+    }
+ 
   }
   
   render() {
