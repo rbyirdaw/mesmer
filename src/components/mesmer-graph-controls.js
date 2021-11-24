@@ -62,7 +62,7 @@ export default class MesmerGraphControls extends HTMLElement {
   };
   
   onMaxDistanceChange = (e) => {
-    const _distCutoff = e.target.value;
+    const _distCutoff = e.target.valueAsNumber;
     console.log("Max distance range changed: ", _distCutoff);
     //update value displayed (span is sibling element)
     e.target.previousElementSibling.innerText = _distCutoff;
@@ -76,7 +76,7 @@ export default class MesmerGraphControls extends HTMLElement {
   };
   
   onMinResGapChange = (e) => {
-    const _resPairGapMin = e.target.value;
+    const _resPairGapMin = e.target.valueAsNumber;
     console.log("Minimum residue gap changed: ", e.target.value);
     //update value displayed (span is sibling element)
     e.target.previousElementSibling.innerText = _resPairGapMin;  

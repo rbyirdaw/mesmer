@@ -1,4 +1,5 @@
 import { D3Graph } from './d3-graph';
+import { memoize } from '../utils/js-utils';
 
 export default class MesmerGraph extends HTMLElement {
 
@@ -44,19 +45,19 @@ export default class MesmerGraph extends HTMLElement {
 
   set resPairwiseDistances(pairwiseDist) {
     this._resPairwiseDistances = pairwiseDist;
-    this.links = this.getMesmerGraphLinks();
+    this.links = this.getMesmerGraphLinks(this._distCutoff, this._resPairGapMin);
     this.renderD3Graph();
   }
 
   set distCutoff(value) {
     this._distCutoff = value;
-    this.links = this.getMesmerGraphLinks();
+    this.links = this.getMesmerGraphLinks(this._distCutoff, this._resPairGapMin);
     this.renderD3Graph();
   }
 
   set resPairGapMin(value) {
     this._resPairGapMin = value;
-    this.links = this.getMesmerGraphLinks();
+    this.links = this.getMesmerGraphLinks(this._distCutoff, this._resPairGapMin);
     this.renderD3Graph();
   }
 
@@ -85,10 +86,7 @@ export default class MesmerGraph extends HTMLElement {
     return graphLinks;
   }
 
-  getMesmerGraphLinks() {
-    const distCutoff = this._distCutoff;
-    const resPairGapMin = this._resPairGapMin;
-  
+  getMesmerGraphLinks = memoize((distCutoff, resPairGapMin) => { 
     let graphLinks = [];
     this._resPairwiseDistances.forEach((singleDist, i) => {
       const res1Index = i;
@@ -99,9 +97,8 @@ export default class MesmerGraph extends HTMLElement {
         }
       });
     });
-  
     return graphLinks;
-  }
+  });
   
   renderD3Graph() {
     this.nodes && (this.d3Graph.nodes = this.nodes);
