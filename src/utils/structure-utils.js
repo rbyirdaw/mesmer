@@ -81,30 +81,35 @@ export const calcPairwiseDistances = (coords) => {
   // Given an array of 3D coordinates for 2 or more residues,
   // i.e. [{.x1, .y1, .z1}, {.x2, .y2, .z2}, ... {.xN, .yN, .zN}]
   // calculate pairwise distances.
-  
-  let pairwiseDist = [];
-  if (coords && coords.length > 1) {
-    const numObjects = coords.length;
 
-    for (let i = 0; i < numObjects - 1; i++) {
-      const obj1 = coords[i];
-      if (!obj1) {
-        continue
-      }
-      let singleDist = [];
-      for (let j = i + 1; j < numObjects; j++) {
-        const obj2 = coords[j];
-        if (!obj2) {
+  let pairwiseDist = [];
+
+  try {
+    if (coords && coords.length > 1) {
+      const numObjects = coords.length;
+  
+      for (let i = 0; i < numObjects - 1; i++) {
+        const obj1 = coords[i];
+        if (!obj1) {
           continue
         }
-        const dist = Math.sqrt(Math.pow((obj2.x - obj1.x), 2) +
-            Math.pow((obj2.y - obj1.y), 2) + 
-            Math.pow((obj2.z - obj1.z), 2));
-        singleDist.push(dist);
+        let singleDist = [];
+        for (let j = i + 1; j < numObjects; j++) {
+          const obj2 = coords[j];
+          if (!obj2) {
+            continue
+          }
+          const dist = Math.sqrt(
+              ((obj2.x - obj1.x) ** 2) +
+              ((obj2.y - obj1.y) ** 2) + 
+              ((obj2.z - obj1.z) ** 2));
+          singleDist.push(dist);
+        }
+        pairwiseDist.push(singleDist);
       }
-      pairwiseDist.push(singleDist);
     }
+  } catch (ex) {
+    console.log("Exception calculating pair-wise distances:", ex);
   }
-
   return pairwiseDist;
 }

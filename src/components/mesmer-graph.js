@@ -6,6 +6,8 @@ export default class MesmerGraph extends HTMLElement {
   constructor() {
     super();
 
+    this.memoized = {};
+
     this.d3Graph;
     this.nodes;
     this.links;
@@ -41,6 +43,8 @@ export default class MesmerGraph extends HTMLElement {
     this._residues = res;
     this.nodes = this.residuesToNodes(this._residues);
     this.renderD3Graph();
+
+    this.memoized.getMesmerGraphLinks = null;
   }
 
   set resPairwiseDistances(pairwiseDist) {
@@ -86,21 +90,30 @@ export default class MesmerGraph extends HTMLElement {
     return graphLinks;
   }
 
-  getMesmerGraphLinks = memoize((distCutoff, resPairGapMin) => { 
-    let graphLinks = [];
-    this._resPairwiseDistances.forEach((singleDist, i) => {
-      const res1Index = i;
-      singleDist.forEach((dist, j) => {
-        const res2Index = j + 1;
-        if (!distCutoff || (distCutoff && dist <= distCutoff) && (res2Index - res1Index >= resPairGapMin)) {
-          graphLinks.push({"source": res1Index, "target": res2Index, "dist": dist.toFixed(3)})
-        }
+  getMesmerGraphLinks = (distCutoff, resPairGapMin) => {
+    if (this.memoized && typeof this.memoized.getMesmerGraphLinks === 'function') {
+      return this.memoized.getMesmerGraphLinks(distCutoff, resPairGapMin);
+    } else {
+      this.memoized.getMesmerGraphLinks = memoize((distCutoff, resPairGapMin) => { 
+        let graphLinks = [];
+        this._resPairwiseDistances.forEach((singleDist, i) => {
+          const res1Index = i;
+          singleDist.forEach((dist, j) => {
+            const res2Index = i + j + 1;
+            if (!distCutoff || (distCutoff && dist <= distCutoff) && (res2Index - res1Index >= resPairGapMin)) {
+              graphLinks.push({"source": res1Index, "target": res2Index, "dist": dist.toFixed(3)})
+            }
+          });
+        });
+        return graphLinks;
       });
-    });
-    return graphLinks;
-  });
+
+      return this.memoized.getMesmerGraphLinks(distCutoff, resPairGapMin);
+    }
+
+  };
   
-  renderD3Graph() {
+   renderD3Graph() {
     this.nodes && (this.d3Graph.nodes = this.nodes);
     this.links && (this.d3Graph.links = this.links);
     this.linkText && (this.d3Graph.linkText = this.linkText);
